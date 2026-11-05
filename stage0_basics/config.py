@@ -106,6 +106,7 @@ def _print_missing_key_help(env_file_exists: bool, placeholder: bool) -> None:
         print(f"没有找到配置文件：{ENV_PATH}")
         print("在项目根目录（和 README.md 同一层）执行：")
         print("    cp .env.example .env")
+        print("Windows 命令提示符可以改用：copy .env.example .env")
         print("然后打开 .env，把 DEEPSEEK_API_KEY 换成你自己的密钥。")
     else:
         print(f"已经找到 {ENV_PATH}，但 DEEPSEEK_API_KEY 是空的。")
@@ -114,7 +115,7 @@ def _print_missing_key_help(env_file_exists: bool, placeholder: bool) -> None:
     print("获取密钥：打开 https://platform.deepseek.com 登录，创建一个 API Key。")
     print("密钥只留在你自己的 .env 里。不要提交到 Git，也不要贴到聊天或截图里。")
     print("没有密钥也可以阅读代码和文档；python -m py_compile 检查语法同样不需要密钥。")
-    print("详细图文步骤见 stage0_basics/README.md。")
+    print("详细步骤见 stage0_basics/README.md。")
 
 
 def require_settings() -> Settings:

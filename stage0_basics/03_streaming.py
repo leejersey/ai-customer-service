@@ -62,7 +62,8 @@ def main() -> None:
             # delta 是「相对于上一包新增加的那一点」，不是累计全文。
             delta = choice.delta
             piece = delta.content if delta is not None else None
-            if piece:
+            # 只收下文本片段。空包和个别非文本增量都跳过，避免把 None 拼进回复。
+            if isinstance(piece, str) and piece != "":
                 pieces.append(piece)
                 # end="" 避免每个片段都换行。flush=True 立刻刷到屏幕，不然可能攒一批才显示。
                 print(piece, end="", flush=True)
