@@ -1,14 +1,7 @@
 # -*- coding: utf-8 -*-
 """阶段 0 · 示例 3：流式输出。
 
-非流式请求要等模型把整段话写完才返回，所以终端会先停一会儿，然后一下子刷出全文。
-流式请求则是每生成一小段就发回来。总等待时间差不多，但人可以更早开始读。
-
-注意：流式时接口不会替你把片段收成一条完整消息。
-如果这是聊天机器人，你必须自己把片段拼好，再作为 assistant 放进历史。
-本脚本只演示拼接，不进入多轮。
-
-在项目根目录运行：
+先运行，再读教程：stage0_basics/docs/03_streaming.md
 
     python stage0_basics/03_streaming.py
 """
@@ -16,7 +9,7 @@
 from config import create_client, describe_settings, print_api_error, require_settings
 
 TEMPERATURE = 0.7
-# 这段回复故意稍长，这样即使网络很快，也更容易看出文字是陆续出现的。
+# 回复故意留得长一些。太短的话，片段会在你眨眼之前全部到齐，看不出「陆续出现」。
 MAX_TOKENS = 400
 
 SYSTEM_PROMPT = "你是「星河数码」的客服。用简体中文分步骤回答，每一步单独成行。"
@@ -36,17 +29,15 @@ def main() -> None:
     print()
     print("开始流式输出。文字会一段段出现；网络很快时，也可能几乎连在一起：")
     print()
-    # 先打印说话人前缀。后面的片段用 end=""，所以会接在这一行后面。
+    # 前缀先打出来。后面的片段不换行，才会接在「模型：」后面，而不是各自占一行。
     print("模型：", end="", flush=True)
 
-    # 接口只给片段。完整回复要靠这个列表自己攒。
+    # 屏幕上的字不是数据。不另存一份，这一轮就没有可以放进历史的 assistant 消息。
     pieces: list[str] = []
-    # 结束原因通常出现在最后一个有内容的片段上，先留空。
     finish_reason = None
 
     try:
-        # stream=True 时，返回值不是完整回复，而是一个可以逐段迭代的对象。
-        # 真正的网络读取发生在下面的 for 循环里，所以异常也可能在循环中途抛出。
+        # 返回值不是整段回复，而是「再要下一段才继续」的流。网络读取发生在 for 循环里。
         stream = client.chat.completions.create(
             model=settings.model,
             messages=messages,
@@ -55,28 +46,27 @@ def main() -> None:
             stream=True,
         )
         for chunk in stream:
-            # 有的包没有 choices，例如个别实现把用量单独放在最后一包。没有文本就跳过。
+            # 有的包只带用量、没有 choices。把它当成正文去取 delta，会在中途崩溃。
             if not chunk.choices:
                 continue
             choice = chunk.choices[0]
-            # delta 是「相对于上一包新增加的那一点」，不是累计全文。
+            # delta 是这一包新增加的一点点，不是到目前为止的累计全文。
             delta = choice.delta
             piece = delta.content if delta is not None else None
-            # 只收下文本片段。空包和个别非文本增量都跳过，避免把 None 拼进回复。
             if isinstance(piece, str) and piece != "":
                 pieces.append(piece)
-                # end="" 避免每个片段都换行。flush=True 立刻刷到屏幕，不然可能攒一批才显示。
+                # 不刷新缓冲区的话，片段可能攒在内存里，人还是要等到最后才看见字。
                 print(piece, end="", flush=True)
             if choice.finish_reason:
                 finish_reason = choice.finish_reason
     except Exception as error:
-        # 失败前可能已经打印了一部分。那部分不是完整回复，本脚本也没有写进历史。
+        # 中断前屏幕上可能已经有半句话。那不是完整回复，也不能写进历史。
         print()
         print_api_error(error)
         print("如果上面已经冒出半句话，那是中断前收到的片段，不能当作完整答案。")
         raise SystemExit(1)
 
-    # 流式打印没有在结尾换行，这里补一行，让后面的说明另起一行。
+    # 流式打印故意不换行，这里补一个换行，避免说明文字粘在回复末尾。
     print()
 
     full_reply = "".join(pieces)
@@ -98,4 +88,5 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
+        # 人按下中断时，已经打印的片段没有被保存。这是故意让现象和「没写入历史」一致。
         print("\n已手动中断。已经打印出来的文字不会被保存。")

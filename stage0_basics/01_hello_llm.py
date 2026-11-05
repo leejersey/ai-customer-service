@@ -1,60 +1,53 @@
 # -*- coding: utf-8 -*-
 """阶段 0 · 示例 1：一次请求，一次回复。
 
-这个脚本只做一件事：把一条用户消息发给 DeepSeek，再把模型的回复打印出来。
-它是后面三个脚本的基础。先跑通它，再读注释。
-
-在项目根目录运行：
+先运行，再读教程：stage0_basics/docs/01_hello_llm.md
 
     python stage0_basics/01_hello_llm.py
 """
 
-# config.py 和本文件在同一个目录。直接运行本文件时，Python 会把该目录放进搜索路径。
+# 读密钥、建客户端、翻译错误都放在 config.py。这一课只保留「发一次、看懂结果」。
 from config import create_client, describe_settings, print_api_error, require_settings
 
-# 温度越高，用词越发散；越低，越倾向于每次都给出差不多的说法。
-# 客服场景通常用偏低的值。0.7 足够稳定，又不是完全背固定答案。
+# 第一课不用 0。温度太低时，两次回答几乎一样，容易误以为模型在背固定句子。
 TEMPERATURE = 0.7
 
-# 只限制「模型这次最多生成多少 token」，不限制我们发出去的提示有多长。
-# 设小一点，是为了让第一次练习又短又省。
+# 练习请求把回复封顶，避免一句问候换回很长的文本、多花额度。
 MAX_TOKENS = 256
 
-# 系统消息：规定说话人的身份。用户在终端里看不到我们把它发给了接口，但模型会遵守它。
+# 身份先于问题。后面的智能体也靠这种系统消息规定「我是谁、不能做什么」。
 SYSTEM_PROMPT = "你是「星河数码」的客服助手。请用简体中文回答，语气礼貌，控制在两句话以内。"
 
-# 用户消息：这一轮真正的问题。换成你自己的句子，就是这个示例的第一个练习。
+# 问题写成常量，是为了改问题做实验时不用钻进函数里面找。
 USER_PROMPT = "你好，请用两句话介绍你能帮顾客做什么。"
 
 
 def main() -> None:
-    # 读取 .env。没有密钥时，require_settings 会打印中文说明并结束，不会继续联网。
+    # 密钥不可用就停在这里。继续往下只会得到难读的 401，而不是这份中文说明。
     settings = require_settings()
-    # 让运行的人确认模型名和地址。函数内部不会打印密钥。
+    # 把地址和模型打出来，用来核对 .env 有没有生效。密钥不能出现在屏幕上。
     describe_settings(settings)
-    # 创建客户端只是在内存里备好地址和密钥，此时还没有发出请求。
+    # 准备电话号码和钥匙。真正拨号、也是可能产生费用的，是下面的 create。
     client = create_client(settings)
 
-    # messages 是一个列表，里面每一项都是一条「谁说了什么」。
-    # 这一次只有两条：开发者写的 system，和顾客说的 user。还没有历史。
+    # 用带角色的列表，而不是拼成一大段字符串。接口要的是这个形状，以后追加历史也不必重拼全文。
     messages = [
         {"role": "system", "content": SYSTEM_PROMPT},
         {"role": "user", "content": USER_PROMPT},
     ]
 
+    # 发送前把列表打出来。否则看起来像程序在别的地方还藏着记忆。
     print()
     print("即将发送的消息：")
     for index, message in enumerate(messages):
-        # index 从 0 数起。打印出来是为了让你看见：请求正文就是这个列表，没有别的隐藏记忆。
+        # 下标从 0 开始，和后面取 choices[0] 是同一种数法。第一条就是第 0 条。
         print(f"[{index}] {message['role']}: {message['content']}")
 
     print()
     print("正在请求模型，请稍等……")
     try:
-        # chat.completions.create 会发起一次 HTTP 请求。
-        # SDK 实际访问的是：{base_url}/chat/completions
-        # 所以 base_url 保持 https://api.deepseek.com ，不要自己把路径加进去。
-        # stream=False 表示等整段回复生成完再一次性返回。流式输出在 03_streaming.py。
+        # stream 写明为 False，是为了和第三课对照。不写也会整段返回，但默认值在代码里看不见。
+        # base_url 不要自己加上 /chat/completions，SDK 会拼这条路径。
         response = client.chat.completions.create(
             model=settings.model,
             messages=messages,
@@ -63,17 +56,17 @@ def main() -> None:
             stream=False,
         )
     except Exception as error:
-        # 网络、密钥、余额、模型名等问题都到这里。翻译成中文后退出。
+        # 这一课失败就结束。命令行客服那一课才会捕获错误后继续等下一句。
         print_api_error(error)
         raise SystemExit(1)
 
-    # choices 是候选回复列表。我们没有要求多份草稿，所以正常情况下只有第 0 项。
+    # 先确认列表非空再取第 0 项。空列表时的 IndexError 看起来像 messages 写错了，其实不是。
     if not response.choices:
         print("接口返回成功，但里面没有任何回复。可以重试一次。")
         raise SystemExit(1)
 
     reply = response.choices[0].message.content
-    # content 正常是字符串。空字符串或别的类型都当成「这次没有可用文本」。
+    # 调用成功和「有可显示的正文」不是一回事。空正文要单独说明，不要一律当成密钥错误。
     if not isinstance(reply, str) or reply.strip() == "":
         print("模型没有返回文本。如果刚把模型换成带「思考」的型号，请稍后再试，或改回 .env 里的模型名。")
         raise SystemExit(1)
@@ -82,7 +75,7 @@ def main() -> None:
     print("模型回复：")
     print(reply)
 
-    # finish_reason 告诉你这段文字为什么停下来。
+    # 同样一段短文字，可能是说完了，也可能是被 max_tokens 切断。只看正文分不出来。
     finish_reason = response.choices[0].finish_reason
     print()
     print(f"结束原因（finish_reason）：{finish_reason}")
@@ -91,7 +84,7 @@ def main() -> None:
     elif finish_reason == "stop":
         print("stop 表示模型自己把话说完了，不是被字数上限切断的。")
 
-    # usage 是这次计费和长度的依据。接口没返回时不要勉强拆它。
+    # 用量是「历史变长就会更贵」的第一份证据。有的响应不带 usage，没有就不拆。
     usage = response.usage
     print()
     if usage is None:
@@ -102,15 +95,15 @@ def main() -> None:
         print(f"合计 token（total_tokens）：{usage.total_tokens}")
         print("提示 token 里包含系统消息和用户消息。回复 token 只计算模型新写出来的部分。")
 
-    # 服务端回显的模型名，有时会带具体版本，不一定和请求里的字符串逐字相同。
+    # 服务端实际使用的名字有时比请求里的名字更具体。两边不一致时，以这一行为准排查模型。
     print(f"服务端报告的模型：{response.model}")
 
 
 if __name__ == "__main__":
-    # 只有「python 01_hello_llm.py」这种直接运行才会进到这里。
-    # 被别的文件 import 时不会自动发请求。
+    # 这个守卫把「运行本文件」和「被别的文件 import」分开。
+    # 没有它的话，将来谁借用这里的函数，都会顺便打出一次付费请求。
     try:
         main()
     except KeyboardInterrupt:
-        # Ctrl+C 是人主动停下，不算接口失败。
+        # 人按了 Ctrl+C，不是接口拒绝。不要走 print_api_error 那套说明。
         print("\n已手动中断。")

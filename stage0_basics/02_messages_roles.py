@@ -1,27 +1,19 @@
 # -*- coding: utf-8 -*-
 """阶段 0 · 示例 2：三种角色，以及为什么第二轮要把历史再发一遍。
 
-脚本会连续做两次请求：
-
-1. 顾客说明自己要退耳机，订单尾号是 86。
-2. 顾客追问「那上面这个订单，拆封了还能退吗？」
-
-第二句里的「上面这个订单」只有带着第一轮的问答才有所指。
-聊天接口不会替你记住第一轮，所以 messages 列表要由我们自己保存并整包重发。
-
-在项目根目录运行：
+先运行，再读教程：stage0_basics/docs/02_messages_roles.md
 
     python stage0_basics/02_messages_roles.py
 """
 
 from config import create_client, describe_settings, print_api_error, require_settings
 
-# 这一课重点看消息列表，不看文采，所以温度低一些，回复更稳。
+# 这一课要比较的是「列表变长了没有」，不是文采。温度放低，避免两轮回答飘得无法对照。
 TEMPERATURE = 0.3
-# 每轮回复限制短一点，打印历史时才看得清。
+# 回复太长时，打印出来的历史会把角色结构淹没掉。
 MAX_TOKENS = 200
 
-# system：开发者设定的规则，一般在列表的第 0 条，并且每一轮都保留。
+# 规则放在每一轮都会重发的第 0 条里。删掉它，模型更容易编出具体退款金额。
 SYSTEM_PROMPT = (
     "你是「星河数码」的客服。用简体中文回答，不超过 80 个字。"
     "不要编造具体的退款金额或物流单号。不确定的规则，就说需要人工确认。"
@@ -29,18 +21,17 @@ SYSTEM_PROMPT = (
 
 
 def show_messages(messages: list[dict[str, str]]) -> None:
-    """把即将发出去的历史原样打印出来。"""
+    """请求前把整份列表打出来，让两次发送的差别肉眼可见。"""
     print("即将发送的 messages：")
     for index, message in enumerate(messages):
-        # role 只能是我们约定的三种：system、user、assistant。
-        # content 是这句的正文。
         print(f"  [{index}] {message['role']}: {message['content']}")
 
 
 def request_reply(client, model: str, messages: list[dict[str, str]]) -> tuple[str, object]:
-    """发一次非流式请求，返回回复文本和整段响应。
+    """发一次非流式请求。
 
-    两次调用共用这个函数，因为参数形式一样。真正变化的是 messages 里有几条。
+    两次调用共用它，是为了保证除了 messages 以外的参数不会一次一个样。
+    这个参数是整份历史。函数看不见调用者手里另有一份更全的列表。
     """
     try:
         response = client.chat.completions.create(
@@ -48,7 +39,7 @@ def request_reply(client, model: str, messages: list[dict[str, str]]) -> tuple[s
             messages=messages,
             temperature=TEMPERATURE,
             max_tokens=MAX_TOKENS,
-            # 仍然一次拿回整段。流式是下一课的主题。
+            # 这一课要看完整 JSON 对应的整段结果。流式放到下一课，避免两件事叠在一起。
             stream=False,
         )
     except Exception as error:
@@ -67,11 +58,10 @@ def request_reply(client, model: str, messages: list[dict[str, str]]) -> tuple[s
 
 
 def print_usage(turn_name: str, usage: object) -> None:
-    """打印这一轮的 token 用量，用来和下一轮对比。"""
+    """并排比较两轮的 prompt token。第二轮变大，才说明历史真的被重新发送了。"""
     if usage is None:
         print(f"{turn_name} 没有返回 token 用量。")
         return
-    # prompt_tokens 会随着历史变长而变大，因为上一轮的问答又被放进了新请求。
     print(
         f"{turn_name} token：prompt={usage.prompt_tokens}, "
         f"completion={usage.completion_tokens}, total={usage.total_tokens}"
@@ -83,14 +73,13 @@ def main() -> None:
     describe_settings(settings)
     client = create_client(settings)
 
-    # 对话状态只存在于这个列表。程序一退出，列表就没了，服务端也不会帮我们留着。
+    # 对话状态只活在这个列表里。进程退出后它就没了，服务器也不会替我们留底。
     messages: list[dict[str, str]] = [
         {"role": "system", "content": SYSTEM_PROMPT},
     ]
 
     print()
     print("========== 第 1 轮 ==========")
-    # 追加用户的第一句话。现在列表是 [system, user]。
     messages.append(
         {
             "role": "user",
@@ -103,13 +92,12 @@ def main() -> None:
     print(reply)
     print_usage("第 1 轮", response.usage)
 
-    # assistant 表示「这是模型说过的话」。
-    # 不把这句追加进去，下一轮模型就看不到自己刚才承诺过什么。
+    # 不把模型刚说的话写回列表，下一轮就看不到它自己承诺过什么。
     messages.append({"role": "assistant", "content": reply})
 
     print()
     print("========== 第 2 轮 ==========")
-    # 第二句故意使用「上面这个订单」。如果请求里没有第一轮，这句话是不完整的。
+    # 「上面这个订单」本身没有订单号。只有整份历史一起送出去，这句话才有所指。
     messages.append(
         {
             "role": "user",
@@ -121,7 +109,7 @@ def main() -> None:
     print("模型回复：")
     print(reply)
     print_usage("第 2 轮", response.usage)
-    # 如果还要第 3 轮，同样要把这句 assistant 再放回列表。本示例到此停止。
+    # 本课到此结束。若要第三轮，同样得先把这句回复写回列表，否则第三句也接不上。
     messages.append({"role": "assistant", "content": reply})
 
     print()
@@ -132,6 +120,7 @@ def main() -> None:
 
 
 if __name__ == "__main__":
+    # 防止这个文件被 import 时连打两次付费请求。
     try:
         main()
     except KeyboardInterrupt:
