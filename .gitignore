@@ -1,0 +1,26 @@
+# 真实密钥。只忽略这个文件，.env.example 是模板，必须可以提交。
+.env
+
+# 虚拟环境目录。每个人在自己电脑上创建，不要提交。
+.venv
+venv/
+
+# Python 运行时生成的字节码缓存。
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 打包和安装时产生的目录。
+build/
+dist/
+*.egg-info/
+
+# 测试或类型检查的缓存，本阶段还用不到，先忽略以免以后误提交。
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# 常见编辑器和系统产生的杂项。
+.idea/
+.vscode/
+.DS_Store
