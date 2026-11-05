@@ -28,9 +28,17 @@
 
 ## 从这里开始
 
-请先读并跟着做 [阶段 0 教程](stage0_basics/README.md)。那里有虚拟环境、安装依赖、申请 DeepSeek 密钥和运行每个脚本的步骤。
+先按 [阶段 0 的安装说明](stage0_basics/README.md) 准备虚拟环境、依赖和密钥。装好之后不要只顺着代码往下读。按这个顺序，每课都是先运行，再读文档里的「为什么」和实验：
 
-没有 API 密钥也可以阅读全部代码。密钥缺失时脚本会用中文说明原因并退出，语法检查不需要联网，也不需要密钥。
+1. [名词表](stage0_basics/docs/glossary.md)，先扫一遍，记不住就先跳过。
+2. [课前：配置怎么进程序](stage0_basics/docs/00_config.md)。
+3. 运行 `01_hello_llm.py`，读 [第 1 课](stage0_basics/docs/01_hello_llm.md)。
+4. 运行 `02_messages_roles.py`，读 [第 2 课](stage0_basics/docs/02_messages_roles.md)。
+5. 运行 `03_streaming.py`，读 [第 3 课](stage0_basics/docs/03_streaming.md)。
+6. 运行 `04_cli_chatbot.py`，读 [第 4 课](stage0_basics/docs/04_cli_chatbot.md)。
+7. [阶段小结](stage0_basics/docs/stage_summary.md)，把这一阶段的限制对上后面的记忆、检索和工具。
+
+目录也可以从 [stage0_basics/docs/README.md](stage0_basics/docs/README.md) 进入。没有 API 密钥也可以把文档读完。密钥缺失时脚本会用中文说明原因并退出，语法检查不需要联网，也不需要密钥。
 
 ## 现在仓库里有什么
 
@@ -41,12 +49,13 @@
 ├── .env.example              配置模板（可以提交）
 ├── .gitignore                忽略 .env、.venv、__pycache__
 └── stage0_basics/
-    ├── README.md             阶段 0 的详细教程
+    ├── README.md             安装步骤，以及指向各课文档
     ├── config.py             读取配置、翻译 API 错误
     ├── 01_hello_llm.py       一次请求，一次回复
     ├── 02_messages_roles.py  角色和多轮历史
     ├── 03_streaming.py       流式输出
-    └── 04_cli_chatbot.py     命令行客服
+    ├── 04_cli_chatbot.py     命令行客服
+    └── docs/                 按课分开的教程、名词表和阶段小结
 ```
 
 ## 这个仓库的约定
@@ -54,4 +63,4 @@
 - 说明文字、文档和代码注释用中文。
 - 变量名、函数名和文件名用英文。
 - 真实密钥只放在你自己电脑上的 `.env` 里。仓库里只有 `.env.example` 这种假占位符。
-- 阶段 0 的脚本注释写得很密，是为了能对着每一行读。后面的阶段会逐渐写成更接近日常项目的样子。
+- 代码注释只解释为什么这样写，不把每一行再翻译一遍。每一课在做什么、JSON 长什么样、改掉以后会怎样，写在 `stage0_basics/docs/`。
