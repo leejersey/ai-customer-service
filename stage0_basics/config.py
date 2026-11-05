@@ -94,15 +94,19 @@ def _print_missing_key_help(env_file_exists: bool, placeholder: bool) -> None:
     """没有可用密钥时打印可以照着做的短说明。"""
     print("还不能调用大模型：没有可用的 DEEPSEEK_API_KEY。")
     print()
-    if not env_file_exists:
+    if placeholder:
+        # 占位符优先说明。否则人已经导出了示例里的假密钥时，会误以为只是没找到文件。
+        if env_file_exists:
+            print(f"已经找到 {ENV_PATH}，但密钥仍是示例里的占位文字。")
+        else:
+            print("当前读到的 DEEPSEEK_API_KEY 仍是示例里的占位文字。")
+        print("请换成你在 DeepSeek 控制台创建的真实密钥。")
+    elif not env_file_exists:
         # 最常见的情况：仓库里只有 .env.example，用户还没复制。
         print(f"没有找到配置文件：{ENV_PATH}")
         print("在项目根目录（和 README.md 同一层）执行：")
         print("    cp .env.example .env")
         print("然后打开 .env，把 DEEPSEEK_API_KEY 换成你自己的密钥。")
-    elif placeholder:
-        print(f"已经找到 {ENV_PATH}，但密钥仍是示例里的占位文字。")
-        print("请换成你在 DeepSeek 控制台创建的真实密钥。")
     else:
         print(f"已经找到 {ENV_PATH}，但 DEEPSEEK_API_KEY 是空的。")
         print("请在等号后面填上密钥，等号两边不要加空格。")
