@@ -9,6 +9,8 @@
 #
 # python-dotenv
 #   从项目根目录的 .env 读取配置。密钥放在 .env 里，而不是写进 .py 文件。
+#
+# 阶段 2 的数据库用 Python 自带的 sqlite3，不用往这个文件里加包。
 
 openai>=1.40.0,<4
 python-dotenv>=1.0.1,<2

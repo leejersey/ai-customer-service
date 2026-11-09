@@ -10,6 +10,14 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# 阶段 2 运行脚本时生成的 SQLite 数据库。练习数据不要提交。
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+
 # 打包和安装时产生的目录。
 build/
 dist/

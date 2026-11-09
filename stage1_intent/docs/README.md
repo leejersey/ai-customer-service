@@ -26,3 +26,4 @@
 4. 运行 `python stage1_intent/test_rules.py`，再运行 `python stage1_intent/04_evaluate.py`，读 [评估](04_evaluate.md)。
 5. 运行 `python stage1_intent/05_cli_with_intent.py`，读 [接回命令行客服](05_cli.md)。
 6. 读 [阶段小结](stage_summary.md)。
+7. 下一阶段是工具和工单：[阶段 2 导读](../../stage2_tools_tickets/docs/README.md)。

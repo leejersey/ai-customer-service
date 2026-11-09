@@ -223,4 +223,4 @@ python -m py_compile stage0_basics/config.py stage0_basics/01_hello_llm.py stage
 
 阶段 0 完成的标志，不是脚本能跑，而是你能指出：正文在哪个字段、历史为什么在本地列表里、流式全文是谁拼的、系统提示为什么挡不住编造。
 
-阶段 1 会在这个命令行客服前面加一层意图识别。那个代码还没有放进仓库。先做完各课实验，再读阶段小结。
+阶段 1 会在这个命令行客服前面加一层意图识别，代码在 [stage1_intent](../stage1_intent/README.md)。先做完各课实验，再读阶段小结。
