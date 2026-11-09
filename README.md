@@ -4,15 +4,16 @@
 
 你不需要一开始就懂人工智能。阶段 0 只假设你愿意使用命令行，并且准备边做边学 Python。
 
-**现在仓库里只完成了阶段 0。** 下面的路线图用来看全貌，打勾的阶段才有代码。
+**现在仓库里完成了阶段 0 和阶段 1。** 下面的路线图用来看全貌，打勾的阶段才有代码。
 
 ## 学习路线
 
 - [x] **阶段 0：环境搭建 + LLM API 基础 + 命令行聊天机器人**
   - 虚拟环境、密钥、一次请求一次回复、消息角色、流式输出，以及一个带历史的命令行客服
   - 教程：[stage0_basics/README.md](stage0_basics/README.md)
-- [ ] **阶段 1：意图识别**
-  - 先判断顾客是在咨询、查订单、要退换货，还是在投诉，再决定怎么答
+- [x] **阶段 1：意图识别**
+  - 用规则和模型判断咨询、查订单、退款、投诉、转人工还是其他，再分流到不同的回复
+  - 教程：[stage1_intent/README.md](stage1_intent/README.md)
 - [ ] **阶段 2：工具调用 + 工单处理（SQLite）**
   - 让模型在需要时调用函数，把查不到的事情写成工单，存进 SQLite
 - [ ] **阶段 3：工作记忆 + 短期记忆（Redis）**
@@ -32,7 +33,9 @@
 
 安装虚拟环境、依赖和密钥的命令仍在 [阶段 0 安装说明](stage0_basics/README.md)。那些命令在干什么，导读走到 `import` 和 `.env` 时会带你读[虚拟环境](stage0_basics/python_basics/09_venv_pip.md)和[环境变量](stage0_basics/python_basics/20_env.md)。
 
-没有 API 密钥也可以把导读读完。密钥缺失时脚本会用中文说明原因并退出。
+阶段 0 读完后，打开 [阶段 1 导读](stage1_intent/docs/README.md)。规则分类、断言和准确率不需要密钥。模型分类在没有密钥时会说明并跳过。
+
+没有 API 密钥也可以把导读读完。阶段 0 的脚本在缺密钥时会退出。阶段 1 的规则脚本不会。
 
 ## 现在仓库里有什么
 
@@ -42,15 +45,16 @@
 ├── requirements.txt          阶段 0 的依赖
 ├── .env.example              配置模板（可以提交）
 ├── .gitignore                忽略 .env、.venv、__pycache__
-└── stage0_basics/
-    ├── README.md             安装步骤，以及指向各课文档
-    ├── config.py             读取配置、翻译 API 错误
-    ├── 01_hello_llm.py       一次请求，一次回复
-    ├── 02_messages_roles.py  角色和多轮历史
-    ├── 03_streaming.py       流式输出
-    ├── 04_cli_chatbot.py     命令行客服
-    ├── docs/                 顺着每个脚本逐行读的导读
-    └── python_basics/        每种语法第一次出现时要停下来做的小课
+├── stage0_basics/
+│   ├── README.md             安装步骤，以及指向各课文档
+│   ├── config.py             读取配置、翻译 API 错误
+│   ├── 01_hello_llm.py       一次请求，一次回复
+│   ├── 02_messages_roles.py  角色和多轮历史
+│   ├── 03_streaming.py       流式输出
+│   ├── 04_cli_chatbot.py     命令行客服
+│   ├── docs/                 顺着每个脚本逐行读的导读
+│   └── python_basics/        语法小课，阶段 1 续写到第 32 课
+└── stage1_intent/            意图识别：规则、JSON 分类、路由、评估、客服
 ```
 
 ## 这个仓库的约定
@@ -58,4 +62,4 @@
 - 说明文字、文档和代码注释用中文。
 - 变量名、函数名和文件名用英文。
 - 真实密钥只放在你自己电脑上的 `.env` 里。仓库里只有 `.env.example` 这种假占位符。
-- 代码注释只解释为什么这样写。逐行在干什么，写在 `stage0_basics/docs/`。第一次出现的语法，写在 `stage0_basics/python_basics/`，由导读在那一行叫你停下来。
+- 代码注释只解释为什么这样写。逐行在干什么，写在各阶段的 `docs/`。第一次出现的语法，写在 `stage0_basics/python_basics/`，由导读在那一行叫你停下来。

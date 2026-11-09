@@ -34,5 +34,14 @@
 | [21 对象、方法和关键字参数](21_objects.md) | 点号调用、`name=value` | `client.chat.completions.create(...)` |
 | [22 生成器](22_generators.md) | `yield`，以及流式的 `for` | `03_streaming.py` |
 | [23 HTTP、API、JSON](23_http_json.md) | 一次网络请求长什么样 | 第一次 `create()` |
+| [24 函数交回字典](24_return_dict.md) | 用键而不是位置带走多个结果 | `classify_by_rules` 的 `return` |
+| [25 正则](25_regex.md) | `re`，按形状找订单号 | `rule_intent.py` 的 `import re` |
+| [26 从别的文件夹导入](26_import_other_folder.md) | `sys.path.insert` | `stage0_link.enable()` |
+| [27 解析不可靠的 JSON](27_json_parse.md) | `json.loads`、`JSONDecodeError`、`find` | `parse_model_output` |
+| [28 函数放进字典](28_functions_in_dict.md) | 选中后再加括号调用 | `HANDLERS` |
+| [29 读文本文件](29_read_text.md) | `Path.read_text` | 标准答案 JSON |
+| [30 assert](30_assert.md) | 断言，以及 pytest 可以以后再装 | `test_rules.py` |
+| [31 列表推导](31_list_comprehension.md) | 一行做出新列表 | 评估脚本取出标签 |
+| [32 准确率](32_accuracy.md) | 猜对条数 / 总条数，混淆计数 | `metrics.py` |
 
-每课都有：人话解释、比方、要你亲手敲的例子和预期输出、常见报错原文、两三道练习和答案。
+每课都有：人话解释、比方、要你亲手敲的例子和预期输出、常见报错原文、两三道练习和答案。阶段 1 的新语法是第 24 到 32 课，仍然不要一口气读完，等导读叫停再读。
