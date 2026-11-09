@@ -1,17 +1,23 @@
-# 阶段 0 教程目录
+# 阶段 0 怎么读
 
-代码注释只解释「为什么要这样写」。每一行在做什么、数据长什么样、改掉以后会怎样，都写在下面这些文档里。建议先把对应脚本跑一遍，看见现象，再回来读。
+你是第一次写 Python 的话，不要从头到尾通读概念，也不要先把 `config.py` 硬看完。打开一份脚本导读，它会按文件从上到下带你走。遇到没学过的语法，导读会写「先停下来读」，你就去 `python_basics` 做那一课的例子，再回到原行。
 
-环境还没装好的话，先按 [阶段 0 的安装说明](../README.md) 做完虚拟环境、依赖和 `.env`，再进入第 2 步。
+还不会打开终端时，先做这三课，否则小例子没有地方敲：
 
-## 推荐阅读顺序
+1. [终端](../python_basics/01_terminal.md)
+2. [`.py` 文件和 `python 文件.py`](../python_basics/02_py_file.md)
+3. [`print`](../python_basics/03_print.md)
 
-1. [名词表](glossary.md)。先扫一遍。看不懂的词先跳过，做完实验再回来查。
-2. [课前：配置怎么进程序](00_config.md)。搞清虚拟环境、环境变量，以及为什么创建客户端还不等于调用模型。
-3. 运行 `python stage0_basics/01_hello_llm.py`，然后读 [第 1 课：一次请求，一次回复](01_hello_llm.md)。
-4. 运行 `python stage0_basics/02_messages_roles.py`，然后读 [第 2 课：角色和必须重发的历史](02_messages_roles.md)。
-5. 运行 `python stage0_basics/03_streaming.py`，然后读 [第 3 课：流式输出](03_streaming.md)。
-6. 运行 `python stage0_basics/04_cli_chatbot.py`，然后读 [第 4 课：命令行客服](04_cli_chatbot.md)。
-7. [阶段小结：这些概念以后用在哪里](stage_summary.md)。
+然后只打开这一份导读，跟着它走完全部语法课：
 
-没有密钥也可以把文档读完。脚本在缺密钥时会说明原因并退出，不会把项目弄坏。
+4. [顺着 `01_hello_llm.py` 逐行读](01_hello_llm.md)。执行到 `import` 时，它会让你转去读 [config.py 的逐行导读](00_config.md)，读完再回来。
+
+之后每一份都先运行，再逐行读。新语法才停下来，旧语法导读会指回已经读过的课。
+
+5. 运行 `python stage0_basics/02_messages_roles.py`，读 [第 2 个脚本](02_messages_roles.md)。
+6. 运行 `python stage0_basics/03_streaming.py`，读 [第 3 个脚本](03_streaming.md)。
+7. 运行 `python stage0_basics/04_cli_chatbot.py`，读 [第 4 个脚本](04_cli_chatbot.md)。
+8. [阶段小结](stage_summary.md)。
+9. 大模型用词忘了再查 [名词表](glossary.md)。编程语法忘了回 [python_basics 目录](../python_basics/README.md)，不要在名词表里找 `import`。
+
+没有密钥也可以把导读读完。脚本缺密钥时会说明原因并退出。

@@ -10,7 +10,7 @@
 - 流式输出时，完整回复是谁负责拼起来的？只打印、不保存会怎样？
 - 密钥为什么不能写在 `.py` 文件里，创建客户端和真正拨号又差在哪？
 
-这些答案不在代码注释里。注释只写「为什么这样写」。按下面的顺序读 `docs/` 里的课。
+这些答案不在代码注释里。注释只写「为什么这样写」。语法第一次出现时，导读会让你停下来去读 `python_basics/`。不要把那些小课当成可以跳过的附录。
 
 没有 DeepSeek 密钥也可以把文档读完。密钥缺失时，脚本会打印中文说明并退出，不会把仓库弄坏。`python -m py_compile` 这种只检查语法的命令也不需要密钥。
 
@@ -24,7 +24,7 @@
 | `03_streaming.py` | 边生成边打印，并把片段拼回一整段 | [第 3 课](docs/03_streaming.md) |
 | `04_cli_chatbot.py` | 一个可以连续聊天的命令行客服，输入 `退出` 结束 | [第 4 课](docs/04_cli_chatbot.md) |
 
-名词表在 [docs/glossary.md](docs/glossary.md)。四课和后面阶段的关系在 [docs/stage_summary.md](docs/stage_summary.md)。目录在 [docs/README.md](docs/README.md)。
+零基础的读法在 [docs/README.md](docs/README.md)：顺着脚本走，遇到新语法就进入 [python_basics](python_basics/README.md)。名词表在 [docs/glossary.md](docs/glossary.md)，只解释大模型用词，不解释 `import`。阶段关系在 [docs/stage_summary.md](docs/stage_summary.md)。
 
 四个脚本都要在**项目根目录**运行（根目录是有 `README.md` 和 `.env.example` 的那一层）。配置是按文件位置寻找 `.env` 的，所以在 `stage0_basics` 目录里执行 `python 01_hello_llm.py` 也可以找到密钥。教程下面的命令统一从根目录写。
 
@@ -164,25 +164,22 @@ client = OpenAI(api_key="sk-不要把真实密钥写在这里")
 
 ## 5. 推荐阅读顺序
 
-下面的命令都在项目根目录、已激活的虚拟环境里执行。每一课都是先看见现象，再读文档。文档里有请求和响应的字段说明、改代码实验、常见误解和小测验。模型的具体用词每次可以不同。
+从来没写过程序的人，按 [docs/README.md](docs/README.md) 走。顺序是：
 
-想先确认语法、暂时又不想联网时：
+1. [终端](python_basics/01_terminal.md)、[怎样运行 `.py`](python_basics/02_py_file.md)、[`print`](python_basics/03_print.md)。这三课不依赖本仓库的脚本。
+2. 打开 [01 的逐行导读](docs/01_hello_llm.md)。它会在 `import`、变量、字符串、函数、列表、`if`、`for`、异常、对象和 JSON 第一次出现时叫你停下来。执行到导入那一行，转去 [config.py 的逐行导读](docs/00_config.md)，读完再回来。
+3. 运行并逐行读 [02](docs/02_messages_roles.md)、[03](docs/03_streaming.md)、[04](docs/04_cli_chatbot.md)。新出现的 `while`、`input`、生成器，导读里有单独的停课点。
+4. 读 [阶段小结](docs/stage_summary.md)。
+
+想只检查语法、不联网：
 
 ```bash
 python -m py_compile stage0_basics/config.py stage0_basics/01_hello_llm.py stage0_basics/02_messages_roles.py stage0_basics/03_streaming.py stage0_basics/04_cli_chatbot.py
 ```
 
-没有任何输出就表示语法通过。这条命令不会读取密钥，也不会调用 API。
+没有任何输出就表示通过。这条命令不读密钥。
 
-1. 扫一遍 [名词表](docs/glossary.md)。看不懂的先跳过。
-2. 读 [课前：配置怎么进程序](docs/00_config.md)，并做里面不需要真密钥的实验。
-3. 运行 `python stage0_basics/01_hello_llm.py`，再读 [第 1 课](docs/01_hello_llm.md)。对照你屏幕上的 token 和 `finish_reason`，不要只看回复好不好看。
-4. 运行 `python stage0_basics/02_messages_roles.py`，再读 [第 2 课](docs/02_messages_roles.md)。把两次打印出来的消息列表留在屏幕上。
-5. 运行 `python stage0_basics/03_streaming.py`，再读 [第 3 课](docs/03_streaming.md)。看片段个数和拼回去的全文是不是同一次回复。
-6. 运行 `python stage0_basics/04_cli_chatbot.py`，再读 [第 4 课](docs/04_cli_chatbot.md)。至少连续问两句，第二句不要重复第一句里的名词。结束时整行输入 `退出`。
-7. 读 [阶段小结](docs/stage_summary.md)。用它检查自己有没有把「列表还在」说成「模型记住了」。
-
-不要从注释逐行翻译代码。注释没有解释 JSON 的字段，也没有写「删掉这一行会怎样」。那些在对应的课里。
+上面第 1 到第 4 节是安装命令本身。命令为什么要激活 `.venv`、为什么 `.env` 不会被 Python 自动读到，以阅读顺序第 2 步里那两课为准，不要只抄命令。
 
 ## 6. 常见错误和解决办法
 

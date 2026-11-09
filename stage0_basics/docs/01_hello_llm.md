@@ -1,205 +1,146 @@
-# 第 1 课：一次请求，一次回复
+# 顺着 `01_hello_llm.py` 逐行读
 
-对应代码：`stage0_basics/01_hello_llm.py`。
+打开 `stage0_basics/01_hello_llm.py`，和这份导读对照。不要跳行。每一节标题里的行号就是文件里的行号。
 
-先在项目根目录运行一遍：
+看到「先停下来读」，就去把那一课的例子敲一遍，再回来看下一节。已经读过的课不会让你重读全文，只会提醒你这行用到了它。
+
+如果你从来没用过终端，在看第 1 行之前先停下来读：
+
+- [终端](../python_basics/01_terminal.md)
+- [`.py` 文件](../python_basics/02_py_file.md)
+- [`print`](../python_basics/03_print.md)
+
+运行这个文件的命令是（人要站在项目根目录）：
 
 ```bash
 python stage0_basics/01_hello_llm.py
 ```
 
-看见一段回复和几行 token 数字之后，再读下面。用词每次可以不同。读的时候对照的是结构，不是背下某一次的句子。
+这就是[`.py` 文件那一课](../python_basics/02_py_file.md)里的「厨师读菜谱」。还没有密钥时，程序会用中文停下来。那也算跑过了。
 
-如果还没有密钥，先读 [课前](00_config.md) 的实验。没有密钥时程序会在拨号前停住，你仍然可以读完本课的 JSON，只是做不了要联网的实验。
-
-## 这一课要解决什么问题
-
-「调用大模型」在闲聊里像一个动词。在程序里它是一次具体的 HTTP 请求：你交出一段 JSON，服务器交回一段 JSON。
-
-这一课只做一次。没有循环，没有历史，没有流式。目的是把这次来回看清楚：我们发出去的到底是什么，拿回来的每个字段是什么，哪一个字段才是要打印的那句话。
-
-## 它和以后的智能体有什么关系
-
-以后的智能体无论多复杂，每一轮说话仍然是这种请求。阶段 2 会在同一次请求里多带上「可以调用的工具」。阶段 7 会把这次请求放进循环。工具和循环都建立在「你看得懂一次请求」之上。
-
-如果这一课的 `choices[0].message.content` 对你还是一串点号，后面的工单和检索会全部变成复制来的咒语。
-
-## 先建立一个脑中的模型
-
-专家在另一栋楼里。你不能把 Python 变量递进那栋楼。你只能托运一份表格，也就是 JSON。
-
-店员（脚本）填写表格：找哪位专家（`model`），案卷里有哪些发言（`messages`），允许多随意（`temperature`），回复最多写多长（`max_tokens`）。信使（OpenAI SDK）把表格送到 `https://api.deepseek.com/chat/completions`，并把工牌放进信封的封面（请求头），不放进表格正文。
-
-专家不保留案卷。这一课只有一轮，所以你还看不见「忘记」的后果。下一课才会故意问一个没有前文就无法理解的问题。
-
-温度可以想成：专家下一句话有好几种都通顺的说法时，允不允许挑一个不那么稳的。它不是智力旋钮。
-
-## 一次来回的顺序
-
-```mermaid
-sequenceDiagram
-    participant Script as 脚本
-    participant SDK as OpenAI SDK
-    participant API as DeepSeek
-    Script->>SDK: chat.completions.create(...)
-    Note over SDK: 把 Python 字典变成 JSON，密钥放进请求头
-    SDK->>API: POST /chat/completions
-    API-->>SDK: 一份完整 JSON
-    Note over SDK: 把 JSON 变成 response 对象
-    SDK-->>Script: response
-    Script->>Script: 读取 choices 的第 0 项
-```
-
-`stream=False` 时，箭头「一份完整 JSON」要等专家写完才回来。所以终端会先停在「正在请求模型」，然后整段出现。第三课才改成写几个字就送一次。
-
-## 这一课第一次用到的 Python
-
-虚拟环境、环境变量、import 和 try/except 的基本样子在 [课前](00_config.md)。这里只补本文件新出现的东西。小例子可以在 `python` 交互模式里贴，不需要密钥。
-
-### 字典和列表
-
-列表是有顺序的一排格子，从 0 开始数。字典是带名字的格子。
+## 第 1 行：注释
 
 ```python
-messages = []
-messages.append({"role": "user", "content": "你好"})
-print(messages[0]["role"])
-print(messages[0]["content"])
+# -*- coding: utf-8 -*-
 ```
 
-`messages[0]` 取出第一格。`["role"]` 再按名字取出这一格里的角色。接口要的就是「列表里面装字典」。
+先停下来读 [注释](../python_basics/04_comments.md)。
 
-如果写成一个大字符串 `"system: 你是客服 user: 你好"`，人还能读，但接口不认这是两条消息。角色边界没了，下一课也无法单独追加一条。
+这行以 `#` 开头，Python 不执行。`coding: utf-8` 是告诉编辑器：文件里的中文按 UTF-8 保存。Python 3 默认就是这样读的。删掉这行，脚本通常仍能运行。留下它，是免得旧编辑器把中文注释存乱。
 
-### for 循环
+## 第 2 到 7 行：文件顶上的说明
 
 ```python
-for index, message in enumerate([{"role": "system"}, {"role": "user"}]):
-    print(index, message["role"])
+"""阶段 0 · 示例 1：一次请求，一次回复。
+...
+"""
 ```
 
-`enumerate` 同时给你编号和元素。输出是 `0 system` 然后 `1 user`。编号从 0 开始不是打印上的习惯，Python 的第一项就是 `[0]`。
+先停下来读 [字符串](../python_basics/07_strings.md) 里「三引号」那一节。后半的 f-string 可以先看完，变量课马上就要用。
 
-### 函数和 `if __name__ == "__main__"`
+这三对引号包住的是文档字符串，给读文件的人看。没有 `print`，所以运行时不会出现在屏幕上。它也不是发给模型的系统提示。系统提示是后面的 `SYSTEM_PROMPT`。
+
+删掉这一段，程序行为不变，只是打开文件的人少了一段目录。
+
+## 第 9 行：这行注释在说设计，不是在执行
 
 ```python
-def main():
-    print("只有被调用时才出现")
-
-if __name__ == "__main__":
-    main()
+# 读密钥、建客户端、翻译错误都放在 config.py。这一课只保留「发一次、看懂结果」。
 ```
 
-直接用 `python 某个文件.py` 运行时，Python 把这个文件的名字设为 `"__main__"`。于是条件成立，`main()` 被调用。
+又是注释。它解释为什么下一行不自己写读密钥的代码。Python 跳过它。
 
-如果另一个文件 `import` 它，名字就不是 `"__main__"`，条件不成立，`main()` 不会跑。我们把会联网的步骤放进 `main()`，就是为了「借用这个文件」和「真的发请求」分开。现在还没有别的文件借用它，但这道门要在第一次写付费代码时就装上。
+## 第 10 行：导入
 
-### 这一课的 try/except 包的是别人的服务器
-
-课前的例子是 `int("abc")`，失败是我们自己的输入。这里的 `try` 包住 `create()`，失败发生在网络、密钥、余额或对方服务器。这些都不是把 Python 语法写错了。
-
-接住以后本课选择退出。错误已经打印成人话，再继续取 `response.choices` 没有意义，因为根本没有 `response`。
-
-## 发出去的 JSON 长什么样
-
-下面是这一课那次调用对应的正文。它是教学用的形状说明，密钥不应该出现在里面。你屏幕上「即将发送的消息」应该能对上 `messages` 里的两句原文。
-
-```json
-{
-  "model": "deepseek-chat",
-  "messages": [
-    {
-      "role": "system",
-      "content": "你是「星河数码」的客服助手。请用简体中文回答，语气礼貌，控制在两句话以内。"
-    },
-    {
-      "role": "user",
-      "content": "你好，请用两句话介绍你能帮顾客做什么。"
-    }
-  ],
-  "temperature": 0.7,
-  "max_tokens": 256,
-  "stream": false
-}
+```python
+from config import create_client, describe_settings, print_api_error, require_settings
 ```
 
-| 字段 | 这一课里它是谁 | 删掉或改错会怎样 |
-| --- | --- | --- |
-| `model` | 来自 `.env` 的 `DEEPSEEK_MODEL` | 名字不存在时，服务器拒绝整次请求，你拿不到回复正文 |
-| `messages` | 那份列表 | 没有它，模型不知道你要问什么。空列表通常会被拒绝 |
-| `messages[].role` | 谁在说话 | 写成 `customer` 这类自造角色，请求不合法 |
-| `messages[].content` | 这句话的文字 | 空内容会让模型无话可答，或直接被拒绝 |
-| `temperature` | 常量 `0.7` | 不传时用对方的默认值。默认值在代码里看不见，所以我们写明 |
-| `max_tokens` | 常量 `256` | 限制的是新回复，不是你发出去的提示。太小会被截断 |
-| `stream` | `false` | 改成 `true` 后，返回的就不再是下面这份完整 JSON，第 1 课的拆法会失效 |
+先停下来读 [import](../python_basics/08_import.md)。如果这里报 `ModuleNotFoundError`，再读 [虚拟环境和 pip](../python_basics/09_venv_pip.md)。
 
-信封封面上还有请求头，SDK 替你加，代码里看不见：
+这句话的意思是：找到和本文件同目录的 `config.py`，把那个文件从头到尾加载一遍，然后把四个函数名带到这里。加载 `config.py` 时，它的顶层会执行，函数体先不执行。
 
-```text
-POST /chat/completions HTTP/1.1
-Host: api.deepseek.com
-Authorization: Bearer sk-你的密钥
-Content-Type: application/json
+所以读完导入课之后，先停下来，把 [config.py 逐行导读](00_config.md) 读完，再回到本文件第 12 行。否则 `require_settings` 对你来说是一个没见过的名字。
+
+四个名字如果有一个在 `config.py` 里不存在，你会看到 `ImportError: cannot import name '...'`。那不是密钥问题。
+
+## 第 12 到 13 行：温度这个名字
+
+```python
+TEMPERATURE = 0.7
 ```
 
-`base_url` 只提供到主机名为止。路径 `/chat/completions` 是 SDK 根据「聊天补全」这个方法补上的。你再在 `base_url` 里写一遍路径，就送错了门牌。
+上面的注释说：第一课不用 0，免得你以为模型在背课文。注释不执行。下一行才执行。
 
-## 拿回来的 JSON 长什么样
+先停下来读 [变量](../python_basics/05_variables.md) 和 [数字](../python_basics/06_numbers.md)。
 
-下面是一份**示例输出**，用来讲解字段。它不是你某次运行的原文，数字和句子都是编的。你自己的回复只要结构对得上即可。
+`TEMPERATURE` 是盒子的名字，`0.7` 是放进去的小数。全大写表示我们不打算在这个文件里再改它。Python 并不禁止修改。后面把它交给 `temperature=` 这个参数。删掉这一行，第 54 行就会 `NameError: name 'TEMPERATURE' is not defined`，请求发不出去。
 
-```json
-{
-  "id": "chatcmpl-example-001",
-  "object": "chat.completion",
-  "created": 1762300000,
-  "model": "deepseek-chat",
-  "choices": [
-    {
-      "index": 0,
-      "message": {
-        "role": "assistant",
-        "content": "你好，我是星河数码的客服助手。我可以说明退换货需要准备什么，但现在还查不到真实订单。"
-      },
-      "finish_reason": "stop"
-    }
-  ],
-  "usage": {
-    "prompt_tokens": 52,
-    "completion_tokens": 36,
-    "total_tokens": 88
-  }
-}
+## 第 15 到 16 行：回复长度上限
+
+```python
+MAX_TOKENS = 256
 ```
 
-SDK 把它变成对象以后，代码里的对应关系是：
+又是一个整数变量。256 限制的是模型这次新写的长度，不是你的问题最多 256 个字。把这里改成 `5` 再运行，回复会很短，而且后面的 `finish_reason` 多半变成 `length`。那是实验，看完改回 256。
 
-| JSON | Python | 你要不要把它当答案 |
-| --- | --- | --- |
-| `id` | `response.id` | 不要。这是这次通话的编号，排错时可能用到 |
-| `object` | `response.object` | 不要。它只说明「这是一次完整聊天补全」 |
-| `created` | `response.created` | 不要。这是时间戳 |
-| `model` | `response.model` | 不是答案，但是核对「实际叫到了哪位专家」 |
-| `choices` | `response.choices` | 回复列表。本课只有一项 |
-| `choices[0].index` | `response.choices[0].index` | 这项在列表中的位置 |
-| `choices[0].message.role` | `.message.role` | 新回复的角色，正常是 `assistant` |
-| `choices[0].message.content` | `.message.content` | **这才是要打印的正文** |
-| `choices[0].finish_reason` | `.finish_reason` | 为什么停，不是正文 |
-| `usage.prompt_tokens` | `response.usage.prompt_tokens` | 这次发出去的 token，含系统提示和用户问题 |
-| `usage.completion_tokens` | `.completion_tokens` | 新写出来的 token |
-| `usage.total_tokens` | `.total_tokens` | 两者相加 |
+## 第 18 到 19 行：系统提示这句文字
 
-`choices` 是列表，因为接口允许你一次要好几份草稿（参数 `n`）。我们没要，所以只有第 0 项。`[0]` 的意思是「唯一的那一份」，不是「最好的那一份」。
+```python
+SYSTEM_PROMPT = "你是「星河数码」的客服助手。请用简体中文回答，语气礼貌，控制在两句话以内。"
+```
 
-`finish_reason` 为 `stop`：模型自己决定说完了。为 `length`：还想说，但 `max_tokens` 到了，正文是半截。两种情况你都可能看到一句通顺的中文，所以必须单独看这个字段。
+字符串课已经读过。这里是把一句中文放进名字 `SYSTEM_PROMPT`。英文双引号是包装纸，不会送给模型。里面的「」是中文引号，是文字的一部分。
 
-`usage` 有时可能缺席。代码先判断 `is None`，就是为了别在「其实已经拿到回复」时，因为拆用量而崩溃。
+这句是岗位说明：你是谁、用什么语言、说多短。它还不是请求。要等放进 `messages` 才会被发送。删掉引号会 `SyntaxError`。把内容改成「只用三个词回答」，模型的说法会跟着变，这就是岗位说明在起作用，不是 Python 语法在起作用。
 
-服务器还可能多给几个本课不用的字段。多出来的先别管。先保证你能指出：正文在 `content`，长度在 `usage`，停的原因在 `finish_reason`。
+## 第 21 到 22 行：用户的问题
 
-## 带着代码走一遍
+```python
+USER_PROMPT = "你好，请用两句话介绍你能帮顾客做什么。"
+```
 
-### 两句消息为什么要分成两个字典
+和上一行同一类。单独做成变量，是为了你改问题时不用钻进函数里面。改成一句更长的话再运行，后面的 `prompt_tokens` 会变大，因为发出去的字变多了。
+
+## 第 25 行：定义 main，先不执行里面
+
+```python
+def main() -> None:
+```
+
+先停下来读 [缩进](../python_basics/10_indentation.md) 和 [函数](../python_basics/11_functions.md)。`-> None` 在函数课里。还不放心就再看一眼 [None](../python_basics/17_none.md)。
+
+从下一行开始，凡是缩进进去的，都先被记住，不立刻做。一直到第 99 行都在 `main` 里面。文件要是没有最后的 `main()`，这些行一次都不会发生，自然也不会花钱。
+
+## 第 26 到 27 行：调用读配置的函数
+
+```python
+settings = require_settings()
+```
+
+这是函数调用：名字后面有括号。`require_settings` 来自第 10 行的导入。括号里没有参数，因为密钥它自己去 `.env` 里找。
+
+返回值放进 `settings`。失败时那个函数会直接结束程序，不会交回一个空密钥。所以没有密钥时，你看不到后面的「即将发送的消息」。
+
+## 第 28 到 29 行：打印地址和模型，不打印密钥
+
+```python
+describe_settings(settings)
+```
+
+又是调用。把刚才的 `settings` 交过去。函数里面有三条 `print`，所以屏幕上出现接口地址、模型名，以及「密钥已读取」。没有 `sk-`。如果这里改成打印 `settings.api_key`，密钥就会出现在屏幕上。我们故意不这么做。
+
+## 第 30 到 31 行：准备客户端
+
+```python
+client = create_client(settings)
+```
+
+先停下来读 [对象和方法](../python_basics/21_objects.md) 的前半，知道「一个值可以带着功能」。
+
+`client` 是 SDK 给你的对象。这一行不联网。删掉它，后面的 `client.chat...` 会 `NameError`。留下它但不调用 `create`，则一分钱都不花。
+
+## 第 33 到 37 行：要发送的两句话
 
 ```python
 messages = [
@@ -208,129 +149,193 @@ messages = [
 ]
 ```
 
-系统提示是开发者的岗位说明，用户提示是这一次的问题。分成两格，模型才知道哪些话是规矩、哪些话是顾客刚说的。
+先停下来读 [列表和字典](../python_basics/13_lists_dicts.md)。
 
-如果删掉 `system` 那一格，请求仍然合法。你应该注意到回复不再稳定地自称星河数码客服，也不再被「两句话以内」约束。岗位说明不是装饰。
+这是一个列表，两格，每格是一个字典。第 0 格是岗位说明，第 1 格是问题。`SYSTEM_PROMPT` 没有引号，所以放进去的是盒子里的那句中文，不是这八个英文字母。
 
-如果把两句都写成 `user`，模型会把岗位说明当成顾客说的话。它有时仍会照做，但「谁规定的」这个边界已经丢了。后面要追加历史时，这个边界会更重要。
+还没有第三格。没有历史。删掉 `system` 那一格，请求往往仍能成功，但回复不再稳定地自称星河数码客服。
 
-问题单独放在 `USER_PROMPT` 里，没有功能上的魔法。它让实验「只改变问题」时，你不会不小心改到发送逻辑。
-
-### 为什么发送前把列表打印出来
+## 第 39 到 44 行：发送前先把列表念出来
 
 ```python
+print()
+print("即将发送的消息：")
 for index, message in enumerate(messages):
     print(f"[{index}] {message['role']}: {message['content']}")
 ```
 
-打印不会改变请求。它存在的理由是：让你亲眼看到这次只有两格，没有隐藏的第三格记忆。
+`print` 课已经学过。`print()` 空一行。
 
-删掉这段，调用仍然成功。你只是少了一份对照，下一课就更难发现「第二次比第一次多了哪几格」。
+先停下来读 [for](../python_basics/14_for.md)。f-string 如果当时跳过了，回到 [字符串课](../python_basics/07_strings.md) 的那一节。
 
-`f"..."` 是把变量嵌进字符串的写法。`f"[{index}]"` 和 `"[" + str(index) + "]"` 是同一件事，前者比较不容易把引号写乱。
+`enumerate` 给编号和这一格。编号从 0 开始，所以你应该看到 `[0] system` 和 `[1] user`。这段打印不改变即将发送的内容。删掉它，模型收到的还是那两句，只是你看不见。
 
-### 为什么这五个参数都写在同一次调用里
+花括号里的引号换成了单引号 `message['role']`，因为外面的 f-string 已经用了双引号。包装纸不能嵌套同一种还没结束的引号。
+
+## 第 46 到 57 行：真正发出请求
 
 ```python
-response = client.chat.completions.create(
-    model=settings.model,
-    messages=messages,
-    temperature=TEMPERATURE,
-    max_tokens=MAX_TOKENS,
-    stream=False,
-)
+print()
+print("正在请求模型，请稍等……")
+try:
+    response = client.chat.completions.create(
+        model=settings.model,
+        messages=messages,
+        temperature=TEMPERATURE,
+        max_tokens=MAX_TOKENS,
+        stream=False,
+    )
 ```
 
-这就是拨号。`model` 不写死在这里，是为了换模型时只改 `.env`，四个脚本一起变。如果这里写成 `"deepseek-chat"`，你改 `.env` 会以为生效了，其实这一课没读。
+先停下来读 [try/except](../python_basics/16_try_except.md)、对象课里「关键字参数」和「从左到右读点号」两节，以及 [HTTP、API、JSON](../python_basics/23_http_json.md)。
 
-删掉 `temperature` 或 `max_tokens`，调用通常仍能成功，只是改用对方默认。实验「把温度调到 0」就没了开关。删掉 `messages` 则没有问题可问，调用会失败。
+`client.chat.completions` 只是往下取对象，没有括号。`create(...)` 才联网。五个等号都是关键字参数，不是给变量重新赋值。
 
-`settings.model` 是字符串。它和 JSON 里的 `"model"` 是同一个信息，只是一边在 Python 对象里，一边在表格里。
+这一次送出去的 JSON 正文相当于（示例结构，密钥不在里面）：
 
-### 为什么不能直接打印整个 `response`
+```json
+{
+  "model": "deepseek-chat",
+  "messages": [
+    {"role": "system", "content": "你是「星河数码」的客服助手。请用简体中文回答，语气礼貌，控制在两句话以内。"},
+    {"role": "user", "content": "你好，请用两句话介绍你能帮顾客做什么。"}
+  ],
+  "temperature": 0.7,
+  "max_tokens": 256,
+  "stream": false
+}
+```
 
-`response` 里混着编号、时间和用量。顾客要看的只有 `content`。学习时我们额外打印 `finish_reason`、`usage` 和 `model`，是为了认识表格，不是因为它们都是答案。
+你屏幕上「即将发送的消息」应该对得上 `messages` 里的两句中文。`false` 是 JSON 里的写法，代码里写的是 `False`。
+
+`stream=False` 表示等全文写完再回来。不写这个参数，SDK 默认也是整段返回。写出来是为了和第三个脚本对照。
+
+## 第 58 到 61 行：失败就说明并结束
+
+```python
+except Exception as error:
+    print_api_error(error)
+    raise SystemExit(1)
+```
+
+`except` 和 `try` 对齐，所以只有 `create` 失败才进来。`error` 是失败本身。`print_api_error` 把它翻译成中文，自己不退出。接着 `raise SystemExit(1)` 由我们结束程序。
+
+如果打印完还去读 `response`，会 `NameError`，因为赋值没成功。密钥错误时你应该看到「密钥被拒绝了」，而不是一长串没人管的英文。
+
+## 第 63 到 66 行：没有回复列表就别去取第 0 个
+
+```python
+if not response.choices:
+    print("接口返回成功，但里面没有任何回复。可以重试一次。")
+    raise SystemExit(1)
+```
+
+先停下来读 [if](../python_basics/12_if.md)。
+
+`response` 是 SDK 把回执 JSON 做成的对象。`.choices` 对上 JSON 里的 `"choices"` 数组。空的时候 `[0]` 会 `IndexError`。先问空不空。
+
+正常成功时这一支不会走进去，你看不到这两句打印。
+
+## 第 68 到 72 行：取出正文，并确认它是一段有字的文字
 
 ```python
 reply = response.choices[0].message.content
+if not isinstance(reply, str) or reply.strip() == "":
+    print("模型没有返回文本。...")
+    raise SystemExit(1)
 ```
 
-这行假定 `choices` 至少有一项，所以前一行先检查了空列表。删掉空列表检查，在正常成功时你看不出差别；在异常成功（没有 choices）时，你会得到 `IndexError`，误以为是自己的消息写坏了。
+从左读到右：第 0 个 choice，里面的 `message`，里面的 `content`。这才是要给人看的句子。JSON 里它在 `choices[0].message.content`。
 
-`content` 还可能是空字符串。调用没有抛错，但没有字可显示。代码把这种情况单独说出来，避免你对着空白屏幕猜网络断了。
+`isinstance(reply, str)` 问它是不是字符串。`reply.strip() == ""` 问去掉空白后是不是空的。两个用 `or` 连起来：是其中任何一种，都算没有文本。
 
-## 跑起来，然后观察
+下面这份是**示例回执**，不是你某次运行的原文。用来对栏名：
 
-正常运行时，终端的骨架应该像这样。尖括号里是会变化的部分：
-
-```text
-接口地址：https://api.deepseek.com
-模型名称：deepseek-chat
-API 密钥：已读取，屏幕上不显示。
-
-即将发送的消息：
-[0] system: 你是「星河数码」的客服助手。……
-[1] user: 你好，请用两句话介绍你能帮顾客做什么。
-
-正在请求模型，请稍等……
-
-模型回复：
-<一段中文，通常不超过两句>
-
-结束原因（finish_reason）：stop
-stop 表示模型自己把话说完了，不是被字数上限切断的。
-
-提示 token（prompt_tokens）：<一个正整数>
-回复 token（completion_tokens）：<一个正整数>
-合计 token（total_tokens）：<前两个之和>
-服务端报告的模型：<与请求相同或更具体的名字>
+```json
+{
+  "choices": [
+    {
+      "index": 0,
+      "message": {"role": "assistant", "content": "你好，我是星河数码的客服助手。我可以说明退换货要准备什么，但现在查不到真实订单。"},
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {"prompt_tokens": 52, "completion_tokens": 36, "total_tokens": 88}
+}
 ```
 
-请你核对这几件事，而不是核对句子好不好看：
+你的数字和句子都会不同。栏的位置不该不同。
 
-- 发送前只有下标 0 和 1。
-- 回复出现在「正在请求」之后，不是在创建客户端的那一行。
-- `total` 等于 prompt 加 completion。如果不等，先看是不是看错了行，而不是先怀疑自己把加法忘了。极少数接口会多算别的用量字段；本课先以这三行为准。
-- 密钥那一行没有出现 `sk-`。
+## 第 74 到 76 行：把正文打印出来
 
-## 如果改掉它，会发生什么
+```python
+print()
+print("模型回复：")
+print(reply)
+```
 
-每次只改一处，看完再改回去。
+`reply` 没有引号，所以打印的是那句回复，不是四个字母 r、e、p、l、y。如果这里写成 `print("reply")`，屏幕上永远是单词 reply，你会以为模型坏了。
 
-1. **把 `TEMPERATURE` 改成 `0`，同一份代码运行两次。** 两段回复往往更接近。再改成 `1.2` 运行两次，用词通常更散，也可能不那么像客服。温度不是越高质量越好。
-2. **把 `MAX_TOKENS` 改成 `5`。** 正文会很短，`finish_reason` 应该变成 `length`。这是「字少」和「被切断」的差别。看完改回 `256`。
-3. **把 `USER_PROMPT` 换成一句更长的问题，例如请它列出五种退货材料。** `prompt_tokens` 应该比刚才大，因为发出去的字变多了。`completion_tokens` 变不变，取决于它写了多少。
-4. **暂时删掉 `system` 那一条，只留 `user`。** 请求仍可成功。注意它还像不像「星河数码的客服」，以及还守不守「两句话」。
-5. **不要真的去做：把密钥打印出来或写进文件。** 你会看见程序也许照样能跑。代价是密钥离开了 `.env`。这一条只用想，不用做。
+## 第 78 到 85 行：为什么停
 
-## 常见误解
+```python
+finish_reason = response.choices[0].finish_reason
+...
+if finish_reason == "length":
+    ...
+elif finish_reason == "stop":
+    ...
+```
 
-- **「屏幕上的回复就是接口返回的全部。」** 不是。回复只是 `content`。编号、停的原因和 token 都在同一份 JSON 里。
-- **「`choices[0]` 表示模型挑了最好的一句。」** 我们只要求了一份。第 0 项是唯一的项。
-- **「`prompt_tokens` 是用户那句话的字数。」** 它包含系统提示和用户提示，而且单位是 token，不是汉字个数。
-- **「`max_tokens` 设成 256，整个请求就不能超过 256。」** 它只管新回复。提示另算，并且受上下文窗口限制，本课的提示远没到那个窗口。
-- **「温度 0 会得到永远相同的句子。」** 它让结果更稳，不是数学上的承诺。换模型、换空白或对方改了默认，仍可能有差别。
-- **「`stop` 是在叫用户停止输入。」** 它是模型这边的结束原因。
-- **「代码能打印中文，就说明程序已经查过星河数码的数据库。」** 星河数码是虚构的练习店。模型只看见你写进 `messages` 的那些字。
-- **「注释把每一行翻译完，就算理解了这次调用。」** 注释只写为什么。你应该能离开注释，自己指出 JSON 里哪一格是正文。
+`==` 是在问相等，不是赋值。`stop` 表示模型自己说完。`length` 表示撞上了 `MAX_TOKENS`。两种情况下你都可能看到一句通顺的中文，所以要单独看这个字段。
 
-## 小测验
+把 `MAX_TOKENS` 改成 5 再运行，应该走进 `length` 那一支。看完改回来。
 
-1. 一次成功调用里，要显示给顾客的文字在哪个字段？
-2. 为什么密钥不在 JSON 正文里，屏幕上也不打印？
-3. `finish_reason` 是 `length` 时，把温度调低能把后半句补出来吗？
-4. 下面哪句描述 `create_client()` 和 `create()` 的差别是对的？
-   - A. 两个都会联网，前者更便宜。
-   - B. 前者只准备配置，后者才发送本课这份 JSON。
-   - C. 前者发送系统提示，后者发送用户提示。
-5. 删掉消息列表里的 `system` 之后，调用为什么往往仍然成功？成功说明岗位说明没有用吗？
+## 第 87 到 96 行：token 用量
 
-## 对照答案
+```python
+usage = response.usage
+if usage is None:
+    print("这次响应没有附带 token 用量。")
+else:
+    print(f"提示 token（prompt_tokens）：{usage.prompt_tokens}")
+    ...
+```
 
-1. `choices[0].message.content`。其他字段是编号、模型名、结束原因或用量。
-2. 正文会被日志和教程引用；请求头里的密钥由 SDK 附带，仍然不能写进源码或打印到屏幕。泄露的是同一把可以花钱的钥匙。
-3. 不能。`length` 表示碰到 `max_tokens`。要看后半句，应增大 `MAX_TOKENS`，而不是改温度。温度影响用词的随意程度，不增加允许的长度。
-4. B。系统提示和用户提示在同一次 `create()` 的 `messages` 里一起走。
-5. 接口并不要求必须有 `system`。成功只说明表格合法。岗位说明的作用体现在回复是否遵守身份和篇幅，不体现在「有没有报错」。
+先确认 [None](../python_basics/17_none.md) 已经读过。
 
-下一课让第二次请求依赖第一次的内容。如果服务器真的会记住你，那个实验就看不出差别：[第 2 课](02_messages_roles.md)。
+`usage is None` 表示回执里没有用量这一栏。有的话，`prompt_tokens` 含系统提示和用户问题，`completion_tokens` 只算新写的，`total_tokens` 一般是两者相加。这些名字和示例 JSON 里的键一致，只是点号和方括号的差别。
+
+改长 `USER_PROMPT` 后再看 `prompt_tokens`，它应该变大。这是「发出去的字变多了」的证据。
+
+## 第 98 到 99 行：对方实际用的模型名
+
+```python
+print(f"服务端报告的模型：{response.model}")
+```
+
+有时和你请求的字符串不完全一样，会更具体。排错时以这一行为准，不要只看 `.env`。
+
+## 第 102 到 109 行：只有直接运行才调用 main
+
+```python
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\n已手动中断。")
+```
+
+先停下来读 [`if __name__`](../python_basics/18_name_main.md)。
+
+直接用 `python .../01_hello_llm.py` 时条件成立，`main()` 才执行，前面的请求才会发生。`except KeyboardInterrupt` 接住 Ctrl+C。这不是密钥错误，所以只说「已手动中断」，不调用 `print_api_error`。
+
+`main()` 如果缩进错到 `if` 外面，导入这个文件的人也会触发一次请求。看它是不是缩在 `if` 里面。
+
+## 读完后你应该能指出来
+
+- 哪一行才联网：第 51 行的 `create`。
+- 正文从哪个字段来：`choices[0].message.content`。
+- 密钥为什么不在你打印的消息里：它在请求头，不在 `messages`。
+
+下一份脚本会把这个「一次来回」做两遍，并让第二句离开第一句就听不懂：[第 2 个脚本](02_messages_roles.md)。

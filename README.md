@@ -28,17 +28,11 @@
 
 ## 从这里开始
 
-先按 [阶段 0 的安装说明](stage0_basics/README.md) 准备虚拟环境、依赖和密钥。装好之后不要只顺着代码往下读。按这个顺序，每课都是先运行，再读文档里的「为什么」和实验：
+从来没写过 Python 的话，不要先通读语法，也不要先啃 `config.py`。打开[导读目录](stage0_basics/docs/README.md)，它会让你从终端开始，再顺着 `01_hello_llm.py` 逐行往下读。每遇到一种新语法，导读会停下来，让你去 `stage0_basics/python_basics/` 做那一课的小例子，做完再回到同一行。
 
-1. [名词表](stage0_basics/docs/glossary.md)，先扫一遍，记不住就先跳过。
-2. [课前：配置怎么进程序](stage0_basics/docs/00_config.md)。
-3. 运行 `01_hello_llm.py`，读 [第 1 课](stage0_basics/docs/01_hello_llm.md)。
-4. 运行 `02_messages_roles.py`，读 [第 2 课](stage0_basics/docs/02_messages_roles.md)。
-5. 运行 `03_streaming.py`，读 [第 3 课](stage0_basics/docs/03_streaming.md)。
-6. 运行 `04_cli_chatbot.py`，读 [第 4 课](stage0_basics/docs/04_cli_chatbot.md)。
-7. [阶段小结](stage0_basics/docs/stage_summary.md)，把这一阶段的限制对上后面的记忆、检索和工具。
+安装虚拟环境、依赖和密钥的命令仍在 [阶段 0 安装说明](stage0_basics/README.md)。那些命令在干什么，导读走到 `import` 和 `.env` 时会带你读[虚拟环境](stage0_basics/python_basics/09_venv_pip.md)和[环境变量](stage0_basics/python_basics/20_env.md)。
 
-目录也可以从 [stage0_basics/docs/README.md](stage0_basics/docs/README.md) 进入。没有 API 密钥也可以把文档读完。密钥缺失时脚本会用中文说明原因并退出，语法检查不需要联网，也不需要密钥。
+没有 API 密钥也可以把导读读完。密钥缺失时脚本会用中文说明原因并退出。
 
 ## 现在仓库里有什么
 
@@ -55,7 +49,8 @@
     ├── 02_messages_roles.py  角色和多轮历史
     ├── 03_streaming.py       流式输出
     ├── 04_cli_chatbot.py     命令行客服
-    └── docs/                 按课分开的教程、名词表和阶段小结
+    ├── docs/                 顺着每个脚本逐行读的导读
+    └── python_basics/        每种语法第一次出现时要停下来做的小课
 ```
 
 ## 这个仓库的约定
@@ -63,4 +58,4 @@
 - 说明文字、文档和代码注释用中文。
 - 变量名、函数名和文件名用英文。
 - 真实密钥只放在你自己电脑上的 `.env` 里。仓库里只有 `.env.example` 这种假占位符。
-- 代码注释只解释为什么这样写，不把每一行再翻译一遍。每一课在做什么、JSON 长什么样、改掉以后会怎样，写在 `stage0_basics/docs/`。
+- 代码注释只解释为什么这样写。逐行在干什么，写在 `stage0_basics/docs/`。第一次出现的语法，写在 `stage0_basics/python_basics/`，由导读在那一行叫你停下来。
