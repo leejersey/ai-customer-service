@@ -1,5 +1,12 @@
 # 顺着路由器逐行读
 
+## 本课需要的基础课
+
+新的是把函数放进字典，选中后再调用。文件末尾的 `if __name__` 是复习。
+
+- 👉 不懂把函数放进字典？先看 [基础课 · 函数放进字典](../../00_python_basics/28_functions_in_dict.md)
+- [基础课 · if \_\_name\_\_](../../00_python_basics/18_name_main.md)
+
 先运行：
 
 ```bash
@@ -18,7 +25,7 @@ python stage1_intent/03_router.py
 
 ## 字典里的函数
 
-先停下来读 [把函数放进字典](../../stage0_basics/python_basics/28_functions_in_dict.md)。
+👉 不懂把函数放进字典？先看 [基础课 · 函数放进字典](../../00_python_basics/28_functions_in_dict.md)。
 
 ```python
 HANDLERS = {
@@ -55,6 +62,6 @@ return result, route(text, result)
 
 `03_router.py` 只有一个循环和几行打印。句子包括转人工、带订单号、退货、音质。前三句的回复应分别提到转人工、订单 10086、还不能退钱。第四句是其他。
 
-没有 `if __name__` 以外的新语法。末尾的守卫复习 [name main](../../stage0_basics/python_basics/18_name_main.md)。这个文件不联网，被别人导入时也不该把四句演示打出来，所以仍然要守卫。
+没有 `if __name__` 以外的新语法。末尾的守卫复习 [基础课 · if \_\_name\_\_](../../00_python_basics/18_name_main.md)。这个文件不联网，被别人导入时也不该把四句演示打出来，所以仍然要守卫。
 
 下一课用一份写好的标准答案给规则打分：[评估](04_evaluate.md)。

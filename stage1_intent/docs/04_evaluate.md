@@ -1,5 +1,14 @@
 # 顺着评估脚本逐行读
 
+## 本课需要的基础课
+
+这一课把测试和打分用到的四课放在一起。阶段 0 没有停下来讲过它们。
+
+- 👉 不懂准确率？先看 [基础课 · 准确率](../../00_python_basics/32_accuracy.md)
+- 👉 不懂读文本文件？先看 [基础课 · 读文本文件](../../00_python_basics/29_read_text.md)
+- 👉 不懂 assert？先看 [基础课 · assert](../../00_python_basics/30_assert.md)
+- 👉 不懂列表推导？先看 [基础课 · 列表推导](../../00_python_basics/31_list_comprehension.md)
+
 先运行：
 
 ```bash
@@ -17,7 +26,7 @@ python stage1_intent/04_evaluate.py
 
 ## `metrics.py`
 
-先停下来读 [准确率](../../stage0_basics/python_basics/32_accuracy.md)。
+👉 不懂准确率？先看 [基础课 · 准确率](../../00_python_basics/32_accuracy.md)。
 
 `accuracy` 用 `enumerate` 对齐两份列表。长度不同或为空，抛 `ValueError`，不去做除法。`confusion` 做出字典套字典。`.get(guess, 0) + 1` 是在计数。
 
@@ -25,7 +34,7 @@ python stage1_intent/04_evaluate.py
 
 ## `04_evaluate.py` 前半：读文件和断言
 
-先停下来读 [读文本文件](../../stage0_basics/python_basics/29_read_text.md) 和 [assert](../../stage0_basics/python_basics/30_assert.md)。
+👉 不懂读文本文件？先看 [基础课 · 读文本文件](../../00_python_basics/29_read_text.md)。👉 不懂 assert？先看 [基础课 · assert](../../00_python_basics/30_assert.md)。
 
 ```python
 DATA_PATH = Path(__file__).resolve().parent / "data" / "labeled_examples.json"
@@ -33,13 +42,13 @@ raw = path.read_text(encoding="utf-8")
 data = json.loads(raw)
 ```
 
-路径跟脚本走。`json.loads` 复习解析课。这里的文件是我们自己写的，解析失败应该暴露，不要兜底成「其他」。兜底是对付模型的。测试集坏了就该停下。
+路径跟脚本走。`json.loads` 复习 [基础课 · 解析 JSON](../../00_python_basics/27_json_parse.md)。这里的文件是我们自己写的，解析失败应该暴露，不要兜底成「其他」。兜底是对付模型的。测试集坏了就该停下。
 
 三个 `assert` 检查每一条是字典、有两个键、意图合法。失败信息里带了未知意图的名字。
 
 ## 列表推导
 
-先停下来读 [列表推导](../../stage0_basics/python_basics/31_list_comprehension.md)。
+👉 不懂列表推导？先看 [基础课 · 列表推导](../../00_python_basics/31_list_comprehension.md)。
 
 ```python
 texts = [item["text"] for item in rows]
@@ -51,7 +60,7 @@ rule_predictions = [classify_by_rules(text)["intent"] for text in texts]
 
 ## 报告
 
-`show_report` 再数一遍猜对的条数，是为了打印 `13/20` 这种分数，而不只打印 `0.65`。`:.2f` 在准确率课里。不一致的句子用 `continue` 跳过猜对的，只印错的。
+`show_report` 再数一遍猜对的条数，是为了打印 `13/20` 这种分数，而不只打印 `0.65`。`:.2f` 在 [基础课 · 准确率](../../00_python_basics/32_accuracy.md) 里。不一致的句子用 `continue` 跳过猜对的，只印错的。
 
 混淆那一行：
 
@@ -59,7 +68,7 @@ rule_predictions = [classify_by_rules(text)["intent"] for text in texts]
 parts = [f"{guess} {count} 次" for guess, count in row.items()]
 ```
 
-`.items()` 在列表推导课的例子里。`"，".join(parts)` 把几段用中文逗号接成一行。`join` 在阶段 0 流式课里用空字符串接过片段，这里换了分隔符。
+`.items()` 在 [基础课 · 列表推导](../../00_python_basics/31_list_comprehension.md) 的例子里。`"，".join(parts)` 把几段用中文逗号接成一行。`join` 在阶段 0 流式课里用空字符串接过片段，这里换了分隔符。
 
 `assert 0.5 < rule_score < 1.0` 在报告打印之后。全对或太差都会在这里停下。它保护的是「这份教材还展示着局限」，不是在测顾客。
 

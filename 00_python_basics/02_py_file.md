@@ -16,7 +16,7 @@
 
 下面要用 `print`。它的完整课是[下一课](03_print.md)。现在只要知道：`print` 后面括号里的文字会被显示到屏幕上。
 
-站在项目根目录。用记事本或编辑器新建一个文件 `stage0_basics/python_basics/try_hello.py`，内容只有一行：
+站在项目根目录。用记事本或编辑器新建一个文件 `00_python_basics/try_hello.py`，内容只有一行：
 
 ```python
 print("你好，我是一个 py 文件")
@@ -25,7 +25,7 @@ print("你好，我是一个 py 文件")
 保存。在项目根目录运行：
 
 ```bash
-python stage0_basics/python_basics/try_hello.py
+python 00_python_basics/try_hello.py
 ```
 
 如果 `python` 不存在，试 `python3`。本仓库其余地方写 `python` 时，都换成你这台电脑上能用的那个。

@@ -1,12 +1,27 @@
 # 顺着 `config.py` 逐行读
 
+## 本课需要的基础课
+
+这一页不重讲语法。注释、字符串和 import 在回到这里之前，[第 1 个脚本](01_hello_llm.md) 已经让你读过。下面是本文件会用到的课。
+
+- [基础课 · 注释](../../00_python_basics/04_comments.md)
+- [基础课 · 字符串](../../00_python_basics/07_strings.md)
+- [基础课 · import](../../00_python_basics/08_import.md)
+- [基础课 · 变量](../../00_python_basics/05_variables.md)
+- [基础课 · 对象和方法](../../00_python_basics/21_objects.md)
+- [基础课 · for](../../00_python_basics/14_for.md)
+- [基础课 · 虚拟环境](../../00_python_basics/09_venv_pip.md)
+- [基础课 · try/except](../../00_python_basics/16_try_except.md)
+- [基础课 · if](../../00_python_basics/12_if.md)
+- [基础课 · 环境变量](../../00_python_basics/20_env.md)
+
 你是从 `01_hello_llm.py` 第 10 行的 `from config import ...` 被送到这里的。那一行会先把本文件从头加载到尾。函数里面的行先被记住，要等 `01` 调用了才会执行。导读仍然按文件顺序讲，并标明哪些行是「加载时就发生」的。
 
 加载本文件不会访问 DeepSeek，也不会读 `.env`。读 `.env` 发生在有人调用 `require_settings()` 的时候。
 
 ## 第 1 到 8 行
 
-第 1 行是[注释](../python_basics/04_comments.md)。第 2 到 7 行是三引号[字符串](../python_basics/07_strings.md)，不打印，不联网。它告诉读文件的人：四个脚本共用这里，是为了不要各写一套密钥。
+第 1 行是[基础课 · 注释](../../00_python_basics/04_comments.md)。第 2 到 7 行是三引号[基础课 · 字符串](../../00_python_basics/07_strings.md)，不打印，不联网。它告诉读文件的人：四个脚本共用这里，是为了不要各写一套密钥。
 
 ## 第 10 到 12 行：导入标准库
 
@@ -16,7 +31,7 @@ import traceback
 from pathlib import Path
 ```
 
-[import 课](../python_basics/08_import.md) 已经讲过三种写法。这里两种都有。
+[基础课 · import](../../00_python_basics/08_import.md) 已经讲过三种写法。这里两种都有。
 
 `os`、`traceback`、`pathlib` 都是标准库，跟着 Python 一起安装，不用 pip。`os` 用来读环境变量。`traceback` 用来在「这不是接口错误」时把调用过程打印出来。`Path` 是 `pathlib` 里的一个名字，专门拼文件路径。
 
@@ -29,7 +44,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 ENV_PATH = PROJECT_ROOT / ".env"
 ```
 
-先确认 [变量](../python_basics/05_variables.md) 和 [对象](../python_basics/21_objects.md) 里「点号是往里面取」已经看过。
+👉 不懂变量？先看 [基础课 · 变量](../../00_python_basics/05_variables.md)。👉 不懂对象？先看 [基础课 · 对象和方法](../../00_python_basics/21_objects.md) 里「点号是往里面取」。
 
 `__file__` 是 Python 给的字符串：本文件自己的路径。`Path(...)` 把它变成路径对象。`.resolve()` 换成不含 `..` 的绝对路径。`.parent` 是上一层文件夹。`config.py` 在 `stage0_basics` 里，所以一个 `.parent` 是 `stage0_basics`，再一个 `.parent` 才是项目根。
 
@@ -82,13 +97,13 @@ class Settings:
 
 `_clean` 去掉首尾空白，如果整段被一对引号包住，再剥掉一层。这是在防「人把密钥连引号一起复制进环境变量」。函数体在加载时不运行。
 
-`_is_placeholder` 把密钥转成小写再和清单比较。[for 课](../python_basics/14_for.md) 的循环在这里第一次出现在本文件。中文标记没有大小写，所以同时用原文比一次。找到就 `return True`，函数立刻结束，不再看后面的标记。一个都没有就 `return False`。
+`_is_placeholder` 把密钥转成小写再和清单比较。👉 不懂 for？先看 [基础课 · for](../../00_python_basics/14_for.md)。这个循环在这里第一次出现在本文件。中文标记没有大小写，所以同时用原文比一次。找到就 `return True`，函数立刻结束，不再看后面的标记。一个都没有就 `return False`。
 
 加载时这两个函数都不执行。
 
 ## 第 74 到 81 行：缺库时的说明
 
-`_exit_because_package_missing` 里面全是 `print`，最后 `raise SystemExit(1)`。它不返回。谁调用它，程序就在这里结束。文案里同时写出导入名和 pip 安装名，因为 `dotenv` 和 `python-dotenv` 不是同一个字符串。先停下来读 [虚拟环境](../python_basics/09_venv_pip.md)，如果导入课里已经读过，看一眼「两个名字」那一节即可。
+`_exit_because_package_missing` 里面全是 `print`，最后 `raise SystemExit(1)`。它不返回。谁调用它，程序就在这里结束。文案里同时写出导入名和 pip 安装名，因为 `dotenv` 和 `python-dotenv` 不是同一个字符串。👉 不懂虚拟环境？先看 [基础课 · 虚拟环境](../../00_python_basics/09_venv_pip.md)。如果导入课里已经读过，看一眼「两个名字」那一节即可。
 
 ## 第 85 到 90 行：为什么 import dotenv 写在函数里面
 
@@ -103,7 +118,7 @@ def _load_dotenv():
 
 如果这行 `from dotenv import ...` 写在文件第 10 行，那么 `import config` 的瞬间就会失败，`01` 连自己的中文说明都来不及组织。放进函数后，只有真的要读 `.env` 时才导入。没安装时走 `except ImportError`，那是「模块找到了但名字不对」或者「包不存在」时都可能出现的一类错误。对 `dotenv` 来说，没安装就是这个失败。
 
-[try 课](../python_basics/16_try_except.md) 在这里用来接住「预计之中的没装库」，而不是接住密钥错误。
+👉 不懂 try/except？先看 [基础课 · try/except](../../00_python_basics/16_try_except.md)。这里用来接住「预计之中的没装库」，而不是接住密钥错误。
 
 `return load_dotenv` 交回去的是函数本身，不是调用它的结果。调用方还要自己加括号。
 
@@ -111,7 +126,7 @@ def _load_dotenv():
 
 `_print_missing_key_help` 只打印，不退出。退出是调用者做的。
 
-先看 `placeholder`。[if / elif / else](../python_basics/12_if.md) 按顺序只进一支。先问是不是假密钥，是因为「环境变量里导出了说明书上的那句话、同时磁盘上没有 `.env`」时，真正该做的是换掉假密钥，而不是只去找文件。
+先看 `placeholder`。👉 不懂 if？先看 [基础课 · if](../../00_python_basics/12_if.md)。`if` / `elif` / `else` 按顺序只进一支。先问是不是假密钥，是因为「环境变量里导出了说明书上的那句话、同时磁盘上没有 `.env`」时，真正该做的是换掉假密钥，而不是只去找文件。
 
 这个函数在加载时不执行。没有密钥时你才会在屏幕上看到这些句子。
 
@@ -124,9 +139,9 @@ load_dotenv = _load_dotenv()
 load_dotenv(ENV_PATH, override=False, encoding="utf-8")
 ```
 
-先拿到 `load_dotenv` 这个函数，再调用它。`override=False` 和 `encoding="utf-8"` 是[关键字参数](../python_basics/21_objects.md)。
+先拿到 `load_dotenv` 这个函数，再调用它。`override=False` 和 `encoding="utf-8"` 是[基础课 · 对象和方法](../../00_python_basics/21_objects.md)里的关键字参数。
 
-先停下来读 [环境变量和 .env](../python_basics/20_env.md)。
+👉 不懂环境变量？先看 [基础课 · 环境变量](../../00_python_basics/20_env.md)。
 
 `encoding="utf-8"` 表示按 UTF-8 读那个文件。文件如果是别的编码，会抛出 `UnicodeError`，被下面的 `except` 接住，提示你另存为 UTF-8，然后 `SystemExit`。不接住的话，你看到的是一串编码错误，不知道要改保存格式。
 
@@ -136,7 +151,7 @@ base_url = _clean(os.environ.get("DEEPSEEK_BASE_URL", "")) or DEFAULT_BASE_URL
 model = _clean(os.environ.get("DEEPSEEK_MODEL", "")) or DEFAULT_MODEL
 ```
 
-`os.environ.get` 在环境课里。第二个参数 `""` 保证找不到时是空字符串，不是 `None`。
+`os.environ.get` 在 [基础课 · 环境变量](../../00_python_basics/20_env.md) 里。第二个参数 `""` 保证找不到时是空字符串，不是 `None`。
 
 `or` 在这里的意思是：左边清洗后如果是空的，就用右边的默认值。空字符串在这种写法里会被当成「没有」，于是换成 `DEFAULT_BASE_URL`。
 

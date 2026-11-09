@@ -2,12 +2,17 @@
 
 这是一个给 Python 初学者的练习仓库。我们会一步步做「星河数码」的客服机器人：先学会调用大模型，再做意图识别、工单、记忆、检索和合规，最后收成一个带网页接口的智能体。
 
-你不需要一开始就懂人工智能。阶段 0 只假设你愿意使用命令行，并且准备边做边学 Python。
+你不需要一开始就懂人工智能。开始之前只假设你愿意使用命令行，并且准备边做边学 Python。
 
-**现在仓库里完成了阶段 0 和阶段 1。** 下面的路线图用来看全貌，打勾的阶段才有代码。
+**现在仓库里完成了基础课、阶段 0 和阶段 1。** 下面的路线图用来看全貌，打勾的阶段才有代码。
 
 ## 学习路线
 
+先学，或按需查阅 [Python 基础课](00_python_basics/README.md)，再按阶段 0 → 7 往下走。基础课是单独的一门课，放在所有阶段前面。阶段文档讲这一阶段的客服在做什么；某个语法第一次出现时只给链接，不在阶段目录里重讲。
+
+- [x] **Python 基础课**
+  - 终端、语法、函数、导入、文件与 JSON、错误处理、网络请求、测试。零基础按课号 01 → 32 学；也可以先做前三课，等阶段导读叫停再查
+  - 教程：[00_python_basics/README.md](00_python_basics/README.md)
 - [x] **阶段 0：环境搭建 + LLM API 基础 + 命令行聊天机器人**
   - 虚拟环境、密钥、一次请求一次回复、消息角色、流式输出，以及一个带历史的命令行客服
   - 教程：[stage0_basics/README.md](stage0_basics/README.md)
@@ -29,11 +34,11 @@
 
 ## 从这里开始
 
-从来没写过 Python 的话，不要先通读语法，也不要先啃 `config.py`。打开[导读目录](stage0_basics/docs/README.md)，它会让你从终端开始，再顺着 `01_hello_llm.py` 逐行往下读。每遇到一种新语法，导读会停下来，让你去 `stage0_basics/python_basics/` 做那一课的小例子，做完再回到同一行。
+从来没写过 Python：先打开 [基础课](00_python_basics/README.md)。可以按推荐顺序把课学完，也可以只做前三课（[终端](00_python_basics/01_terminal.md)、[运行 `.py`](00_python_basics/02_py_file.md)、[`print`](00_python_basics/03_print.md)），然后进入阶段。阶段导读里看到「👉 不懂……？先看基础课」，就跳回那一课，做完再回到原来那一行。
 
-安装虚拟环境、依赖和密钥的命令仍在 [阶段 0 安装说明](stage0_basics/README.md)。那些命令在干什么，导读走到 `import` 和 `.env` 时会带你读[虚拟环境](stage0_basics/python_basics/09_venv_pip.md)和[环境变量](stage0_basics/python_basics/20_env.md)。
+安装虚拟环境、依赖和密钥的命令在 [阶段 0 安装说明](stage0_basics/README.md)。那些命令在干什么，读基础课的 [虚拟环境](00_python_basics/09_venv_pip.md) 和 [环境变量](00_python_basics/20_env.md)。逐行在干什么，打开 [阶段 0 导读](stage0_basics/docs/README.md)。导读开头有「本阶段需要的基础课」。
 
-阶段 0 读完后，打开 [阶段 1 导读](stage1_intent/docs/README.md)。规则分类、断言和准确率不需要密钥。模型分类在没有密钥时会说明并跳过。
+阶段 0 读完后，打开 [阶段 1 导读](stage1_intent/docs/README.md)。规则分类、断言和准确率不需要密钥。模型分类在没有密钥时会说明并跳过。阶段 1 新用到的语法是基础课第 24 到 32 课，仍然在基础课目录里，不在 `stage1_intent/` 里。
 
 没有 API 密钥也可以把导读读完。阶段 0 的脚本在缺密钥时会退出。阶段 1 的规则脚本不会。
 
@@ -45,6 +50,8 @@
 ├── requirements.txt          阶段 0 的依赖
 ├── .env.example              配置模板（可以提交）
 ├── .gitignore                忽略 .env、.venv、__pycache__
+├── scripts/check_md_links.py 检查 Markdown 相对链接是否都能打开
+├── 00_python_basics/         Python 基础课。01–32 课都在这里，按主题写在该目录的 README
 ├── stage0_basics/
 │   ├── README.md             安装步骤，以及指向各课文档
 │   ├── config.py             读取配置、翻译 API 错误
@@ -52,8 +59,7 @@
 │   ├── 02_messages_roles.py  角色和多轮历史
 │   ├── 03_streaming.py       流式输出
 │   ├── 04_cli_chatbot.py     命令行客服
-│   ├── docs/                 顺着每个脚本逐行读的导读
-│   └── python_basics/        语法小课，阶段 1 续写到第 32 课
+│   └── docs/                 顺着每个脚本逐行读的导读，语法只链接到基础课
 └── stage1_intent/            意图识别：规则、JSON 分类、路由、评估、客服
 ```
 
@@ -62,4 +68,7 @@
 - 说明文字、文档和代码注释用中文。
 - 变量名、函数名和文件名用英文。
 - 真实密钥只放在你自己电脑上的 `.env` 里。仓库里只有 `.env.example` 这种假占位符。
-- 代码注释只解释为什么这样写。逐行在干什么，写在各阶段的 `docs/`。第一次出现的语法，写在 `stage0_basics/python_basics/`，由导读在那一行叫你停下来。
+- 代码注释只解释为什么这样写。逐行在干什么，写在各阶段的 `docs/`。
+- 基础概念只写在 `00_python_basics/`。新的一课按主题归进基础课 README 的某一章，写清学什么、哪些阶段会用到，并按现有课号往后编号。阶段文档不要复制课文：概念第一次出现时写成「👉 不懂……？先看基础课 · ……」，链接到 `00_python_basics/` 里的具体文件，并在该阶段导读开头维护「本阶段需要的基础课」。
+- 阶段 2 到 7 以后如果需要还没讲过的语法，也加进这门基础课，不要在新的阶段目录里再开一份语法讲义。
+- 改完文档后运行 `python scripts/check_md_links.py`，确认相对链接都指向存在的文件。

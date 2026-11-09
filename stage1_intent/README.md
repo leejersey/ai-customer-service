@@ -2,7 +2,7 @@
 
 在阶段 0 的客服会说话之后，先判断顾客想干什么，再决定用哪一段回复。这一阶段不查数据库。
 
-零基础的读法在 [docs/README.md](docs/README.md)。语法小课仍在 `stage0_basics/python_basics/`，新课从第 24 课开始。
+零基础的读法在 [docs/README.md](docs/README.md)。语法都在 [基础课](../00_python_basics/README.md)，不在本目录。本阶段会新用到第 24 到 32 课，清单在导读开头。
 
 没有密钥时可以运行：
 
