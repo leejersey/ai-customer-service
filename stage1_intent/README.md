@@ -16,3 +16,5 @@ python stage1_intent/05_cli_with_intent.py
 ```
 
 `02` 会演示坏 JSON 的兜底，然后说明跳过模型。`05` 会改用规则和写死回复。配好阶段 0 的 `.env` 之后，`02`、`04` 和 `05` 才会调用模型。
+
+阶段 2 把「我先记下了」换成真正的查询和工单，从 [stage2_tools_tickets/README.md](../stage2_tools_tickets/README.md) 继续。
