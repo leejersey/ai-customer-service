@@ -1,0 +1,14 @@
+# 阶段 0 只需要两个库。在已经激活的虚拟环境里执行：
+#     pip install -r requirements.txt
+#
+# openai
+#   OpenAI 官方的 Python SDK。DeepSeek 提供了与它兼容的聊天接口，
+#   所以我们改 base_url 和密钥，就能用同一个库调用 DeepSeek。
+#   本仓库使用 chat.completions（聊天补全），不使用更新的 Responses API。
+#   上限写到 <4，是为了避免将来大版本改了调用方式后，pip 自动装上不兼容的版本。
+#
+# python-dotenv
+#   从项目根目录的 .env 读取配置。密钥放在 .env 里，而不是写进 .py 文件。
+
+openai>=1.40.0,<4
+python-dotenv>=1.0.1,<2
