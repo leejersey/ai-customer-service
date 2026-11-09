@@ -1,5 +1,15 @@
 # 顺着 `03_streaming.py` 逐行读
 
+## 本课需要的基础课
+
+这一页不重讲已经学过的语法。新的是生成器。`while` 的 `continue` 会先被点到，正式停下来读 `while` 和 `input` 在下一份命令行客服。
+
+- [基础课 · print](../../00_python_basics/03_print.md)
+- [基础课 · None](../../00_python_basics/17_none.md)
+- [基础课 · 生成器](../../00_python_basics/22_generators.md)
+- [基础课 · HTTP、API、JSON](../../00_python_basics/23_http_json.md)
+- [基础课 · while](../../00_python_basics/15_while.md)
+
 先运行：
 
 ```bash
@@ -39,7 +49,7 @@ print()
 print("模型：", end="", flush=True)
 ```
 
-前三个 `print` 只是说明。最后一个 `end=""` 取消换行，`flush=True` 立刻显示。先停下来复习 [print](../python_basics/03_print.md) 里「不换行」那一节，如果当时没敲过。
+前三个 `print` 只是说明。最后一个 `end=""` 取消换行，`flush=True` 立刻显示。👉 不记得 `print` 可以不换行？先看 [基础课 · print](../../00_python_basics/03_print.md) 里「不换行」那一节，如果当时没敲过。
 
 删掉 `end=""`，每个稍后到来的小片段都会独占一行，很难读成一段话。删掉 `flush=True`，有的终端仍逐段出现，有的会攒到最后。所以代码写明，不靠终端碰巧。
 
@@ -50,7 +60,7 @@ pieces: list[str] = []
 finish_reason = None
 ```
 
-`pieces` 是空列表，用来留下文字。屏幕上的字不会自动进这个列表。`finish_reason = None` 是先放一张「还没有」的卡片。[None 课](../python_basics/17_none.md) 里说过：还没赋值就去读它会 `NameError`，所以先写成 `None`。结束原因要等最后一块数据才知道。
+`pieces` 是空列表，用来留下文字。屏幕上的字不会自动进这个列表。`finish_reason = None` 是先放一张「还没有」的卡片。[基础课 · None](../../00_python_basics/17_none.md) 里说过：还没赋值就去读它会 `NameError`，所以先写成 `None`。结束原因要等最后一块数据才知道。
 
 ## 第 39 到 47 行：create 的返回值变了
 
@@ -61,7 +71,7 @@ stream = client.chat.completions.create(
 )
 ```
 
-先停下来读 [生成器](../python_basics/22_generators.md)。HTTP 课里 SSE 那一段如果跳过了，回到 [HTTP 课](../python_basics/23_http_json.md) 最后一节。
+👉 不懂生成器？先看 [基础课 · 生成器](../../00_python_basics/22_generators.md)。HTTP 课里 SSE 那一段如果跳过了，回到 [基础课 · HTTP、API、JSON](../../00_python_basics/23_http_json.md) 最后一节。
 
 `stream=True` 时，`create` 很快交回一个流，不是带 `message.content` 的完整对象。真正的等待在下面的 `for` 里。JSON 这边每个小包长得像（示例，切分位置每次不同）：
 
@@ -90,7 +100,7 @@ for chunk in stream:
         finish_reason = choice.finish_reason
 ```
 
-`for` 的语法没变，右边不是列表。`continue` 在 [while 课](../python_basics/15_while.md) 里学过：这一轮剩下的别做了，去要下一块。有的包没有 `choices`（例如只带用量）。不去 `continue` 就去取 `[0]`，会在中途 `IndexError`。
+`for` 的语法没变，右边不是列表。`continue` 在 [基础课 · while](../../00_python_basics/15_while.md) 里：这一轮剩下的别做了，去要下一块。有的包没有 `choices`（例如只带用量）。不去 `continue` 就去取 `[0]`，会在中途 `IndexError`。还没读过 `while` 的话，可以先看这一节，下一份命令行客服会再停下来。
 
 `delta` 是这一包新增加的一点，不是从开头到现在的全文。用它覆盖上一屏，会只剩下最后几个字。
 

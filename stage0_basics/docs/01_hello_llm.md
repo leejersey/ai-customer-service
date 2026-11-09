@@ -1,14 +1,34 @@
 # 顺着 `01_hello_llm.py` 逐行读
 
+## 本课需要的基础课
+
+这一页不重讲语法。下面这些课在正文第一次用到时会再停一次。完整清单见 [导读目录](README.md#本阶段需要的基础课)。
+
+- 👉 不懂终端？先看 [基础课 · 终端](../../00_python_basics/01_terminal.md)
+- 👉 不会运行 `.py` 文件？先看 [基础课 · .py 文件](../../00_python_basics/02_py_file.md)
+- 👉 不懂 `print`？先看 [基础课 · print](../../00_python_basics/03_print.md)
+- [基础课 · 注释](../../00_python_basics/04_comments.md)
+- [基础课 · 字符串](../../00_python_basics/07_strings.md)
+- [基础课 · import](../../00_python_basics/08_import.md)
+- [基础课 · 虚拟环境](../../00_python_basics/09_venv_pip.md)
+- [基础课 · 变量](../../00_python_basics/05_variables.md)
+- [基础课 · 数字](../../00_python_basics/06_numbers.md)
+- [基础课 · 缩进](../../00_python_basics/10_indentation.md)
+- [基础课 · 函数](../../00_python_basics/11_functions.md)
+- [基础课 · None](../../00_python_basics/17_none.md)
+- [基础课 · 对象和方法](../../00_python_basics/21_objects.md)
+- [基础课 · 列表和字典](../../00_python_basics/13_lists_dicts.md)
+- [基础课 · for](../../00_python_basics/14_for.md)
+- [基础课 · try/except](../../00_python_basics/16_try_except.md)
+- [基础课 · HTTP、API、JSON](../../00_python_basics/23_http_json.md)
+- [基础课 · if](../../00_python_basics/12_if.md)
+- [基础课 · if \_\_name\_\_](../../00_python_basics/18_name_main.md)
+
 打开 `stage0_basics/01_hello_llm.py`，和这份导读对照。不要跳行。每一节标题里的行号就是文件里的行号。
 
-看到「先停下来读」，就去把那一课的例子敲一遍，再回来看下一节。已经读过的课不会让你重读全文，只会提醒你这行用到了它。
+看到「👉 不懂……？先看基础课」，就去把那一课的例子敲一遍，再回来看下一节。已经读过的课不会让你重读全文，只会提醒你这行用到了它。
 
-如果你从来没用过终端，在看第 1 行之前先停下来读：
-
-- [终端](../python_basics/01_terminal.md)
-- [`.py` 文件](../python_basics/02_py_file.md)
-- [`print`](../python_basics/03_print.md)
+如果你从来没用过终端，在看第 1 行之前先做清单最上面的三课。
 
 运行这个文件的命令是（人要站在项目根目录）：
 
@@ -16,7 +36,7 @@
 python stage0_basics/01_hello_llm.py
 ```
 
-这就是[`.py` 文件那一课](../python_basics/02_py_file.md)里的「厨师读菜谱」。还没有密钥时，程序会用中文停下来。那也算跑过了。
+这就是[基础课 · .py 文件](../../00_python_basics/02_py_file.md)里的「厨师读菜谱」。还没有密钥时，程序会用中文停下来。那也算跑过了。
 
 ## 第 1 行：注释
 
@@ -24,7 +44,7 @@ python stage0_basics/01_hello_llm.py
 # -*- coding: utf-8 -*-
 ```
 
-先停下来读 [注释](../python_basics/04_comments.md)。
+👉 不懂注释？先看 [基础课 · 注释](../../00_python_basics/04_comments.md)。
 
 这行以 `#` 开头，Python 不执行。`coding: utf-8` 是告诉编辑器：文件里的中文按 UTF-8 保存。Python 3 默认就是这样读的。删掉这行，脚本通常仍能运行。留下它，是免得旧编辑器把中文注释存乱。
 
@@ -36,7 +56,7 @@ python stage0_basics/01_hello_llm.py
 """
 ```
 
-先停下来读 [字符串](../python_basics/07_strings.md) 里「三引号」那一节。后半的 f-string 可以先看完，变量课马上就要用。
+👉 不懂字符串？先看 [基础课 · 字符串](../../00_python_basics/07_strings.md) 里「三引号」那一节。后半的 f-string 可以先看完，变量课马上就要用。
 
 这三对引号包住的是文档字符串，给读文件的人看。没有 `print`，所以运行时不会出现在屏幕上。它也不是发给模型的系统提示。系统提示是后面的 `SYSTEM_PROMPT`。
 
@@ -56,7 +76,7 @@ python stage0_basics/01_hello_llm.py
 from config import create_client, describe_settings, print_api_error, require_settings
 ```
 
-先停下来读 [import](../python_basics/08_import.md)。如果这里报 `ModuleNotFoundError`，再读 [虚拟环境和 pip](../python_basics/09_venv_pip.md)。
+👉 不懂 import？先看 [基础课 · import](../../00_python_basics/08_import.md)。如果这里报 `ModuleNotFoundError`，再看 👉 不懂虚拟环境？先看 [基础课 · 虚拟环境](../../00_python_basics/09_venv_pip.md)。
 
 这句话的意思是：找到和本文件同目录的 `config.py`，把那个文件从头到尾加载一遍，然后把四个函数名带到这里。加载 `config.py` 时，它的顶层会执行，函数体先不执行。
 
@@ -72,7 +92,7 @@ TEMPERATURE = 0.7
 
 上面的注释说：第一课不用 0，免得你以为模型在背课文。注释不执行。下一行才执行。
 
-先停下来读 [变量](../python_basics/05_variables.md) 和 [数字](../python_basics/06_numbers.md)。
+👉 不懂变量？先看 [基础课 · 变量](../../00_python_basics/05_variables.md)。👉 不懂数字？先看 [基础课 · 数字](../../00_python_basics/06_numbers.md)。
 
 `TEMPERATURE` 是盒子的名字，`0.7` 是放进去的小数。全大写表示我们不打算在这个文件里再改它。Python 并不禁止修改。后面把它交给 `temperature=` 这个参数。删掉这一行，第 54 行就会 `NameError: name 'TEMPERATURE' is not defined`，请求发不出去。
 
@@ -108,7 +128,7 @@ USER_PROMPT = "你好，请用两句话介绍你能帮顾客做什么。"
 def main() -> None:
 ```
 
-先停下来读 [缩进](../python_basics/10_indentation.md) 和 [函数](../python_basics/11_functions.md)。`-> None` 在函数课里。还不放心就再看一眼 [None](../python_basics/17_none.md)。
+👉 不懂缩进？先看 [基础课 · 缩进](../../00_python_basics/10_indentation.md)。👉 不懂函数？先看 [基础课 · 函数](../../00_python_basics/11_functions.md)。`-> None` 在函数课里。还不放心就再看一眼 [基础课 · None](../../00_python_basics/17_none.md)。
 
 从下一行开始，凡是缩进进去的，都先被记住，不立刻做。一直到第 99 行都在 `main` 里面。文件要是没有最后的 `main()`，这些行一次都不会发生，自然也不会花钱。
 
@@ -136,7 +156,7 @@ describe_settings(settings)
 client = create_client(settings)
 ```
 
-先停下来读 [对象和方法](../python_basics/21_objects.md) 的前半，知道「一个值可以带着功能」。
+👉 不懂对象和方法？先看 [基础课 · 对象和方法](../../00_python_basics/21_objects.md) 的前半，知道「一个值可以带着功能」。
 
 `client` 是 SDK 给你的对象。这一行不联网。删掉它，后面的 `client.chat...` 会 `NameError`。留下它但不调用 `create`，则一分钱都不花。
 
@@ -149,7 +169,7 @@ messages = [
 ]
 ```
 
-先停下来读 [列表和字典](../python_basics/13_lists_dicts.md)。
+👉 不懂列表和字典？先看 [基础课 · 列表和字典](../../00_python_basics/13_lists_dicts.md)。
 
 这是一个列表，两格，每格是一个字典。第 0 格是岗位说明，第 1 格是问题。`SYSTEM_PROMPT` 没有引号，所以放进去的是盒子里的那句中文，不是这八个英文字母。
 
@@ -166,7 +186,7 @@ for index, message in enumerate(messages):
 
 `print` 课已经学过。`print()` 空一行。
 
-先停下来读 [for](../python_basics/14_for.md)。f-string 如果当时跳过了，回到 [字符串课](../python_basics/07_strings.md) 的那一节。
+👉 不懂 for？先看 [基础课 · for](../../00_python_basics/14_for.md)。f-string 如果当时跳过了，回到 [基础课 · 字符串](../../00_python_basics/07_strings.md) 的那一节。
 
 `enumerate` 给编号和这一格。编号从 0 开始，所以你应该看到 `[0] system` 和 `[1] user`。这段打印不改变即将发送的内容。删掉它，模型收到的还是那两句，只是你看不见。
 
@@ -187,7 +207,7 @@ try:
     )
 ```
 
-先停下来读 [try/except](../python_basics/16_try_except.md)、对象课里「关键字参数」和「从左到右读点号」两节，以及 [HTTP、API、JSON](../python_basics/23_http_json.md)。
+👉 不懂 try/except？先看 [基础课 · try/except](../../00_python_basics/16_try_except.md)。对象课里「关键字参数」和「从左到右读点号」两节在 [基础课 · 对象和方法](../../00_python_basics/21_objects.md)。👉 不懂 HTTP、API、JSON？先看 [基础课 · HTTP、API、JSON](../../00_python_basics/23_http_json.md)。
 
 `client.chat.completions` 只是往下取对象，没有括号。`create(...)` 才联网。五个等号都是关键字参数，不是给变量重新赋值。
 
@@ -230,7 +250,7 @@ if not response.choices:
     raise SystemExit(1)
 ```
 
-先停下来读 [if](../python_basics/12_if.md)。
+👉 不懂 if？先看 [基础课 · if](../../00_python_basics/12_if.md)。
 
 `response` 是 SDK 把回执 JSON 做成的对象。`.choices` 对上 JSON 里的 `"choices"` 数组。空的时候 `[0]` 会 `IndexError`。先问空不空。
 
@@ -302,7 +322,7 @@ else:
     ...
 ```
 
-先确认 [None](../python_basics/17_none.md) 已经读过。
+先确认 [基础课 · None](../../00_python_basics/17_none.md) 已经读过。
 
 `usage is None` 表示回执里没有用量这一栏。有的话，`prompt_tokens` 含系统提示和用户问题，`completion_tokens` 只算新写的，`total_tokens` 一般是两者相加。这些名字和示例 JSON 里的键一致，只是点号和方括号的差别。
 
@@ -326,7 +346,7 @@ if __name__ == "__main__":
         print("\n已手动中断。")
 ```
 
-先停下来读 [`if __name__`](../python_basics/18_name_main.md)。
+👉 不懂 `if __name__`？先看 [基础课 · if \_\_name\_\_](../../00_python_basics/18_name_main.md)。
 
 直接用 `python .../01_hello_llm.py` 时条件成立，`main()` 才执行，前面的请求才会发生。`except KeyboardInterrupt` 接住 Ctrl+C。这不是密钥错误，所以只说「已手动中断」，不调用 `print_api_error`。
 

@@ -1,5 +1,13 @@
 # 顺着模型分类逐行读
 
+## 本课需要的基础课
+
+新的是从另一个文件夹导入，以及解析不一定合法的 JSON。环境变量是复习。
+
+- 👉 不懂跨文件夹导入？先看 [基础课 · 从另一个文件夹导入](../../00_python_basics/26_import_other_folder.md)
+- 👉 不懂解析不一定合法的 JSON？先看 [基础课 · 解析 JSON](../../00_python_basics/27_json_parse.md)
+- [基础课 · 环境变量](../../00_python_basics/20_env.md)
+
 先运行：
 
 ```bash
@@ -12,7 +20,7 @@ python stage1_intent/02_llm_classifier.py
 
 ## `stage0_link.py`
 
-先停下来读 [从另一个文件夹导入](../../stage0_basics/python_basics/26_import_other_folder.md)。
+👉 不懂跨文件夹导入？先看 [基础课 · 从另一个文件夹导入](../../00_python_basics/26_import_other_folder.md)。
 
 `STAGE0_DIR` 用 `__file__` 找到仓库根，再进入 `stage0_basics`。`enable` 里如果路径已经在 `sys.path` 就返回。否则 `insert(0, ...)`。
 
@@ -37,7 +45,7 @@ except ImportError:
 
 `import` 写在函数里，和阶段 0 把 `import openai` 放进函数是同一理由：失败时由我们决定怎么办。这里的决定是返回 `False`，不是 `SystemExit`。规则打分和坏 JSON 演示必须继续。
 
-后面 `load_dotenv`、`_clean`、`_is_placeholder` 复习 [环境变量](../../stage0_basics/python_basics/20_env.md)。空密钥和占位符都返回 `False`。
+后面 `load_dotenv`、`_clean`、`_is_placeholder` 复习 [基础课 · 环境变量](../../00_python_basics/20_env.md)。空密钥和占位符都返回 `False`。
 
 ## 兜底字典
 
@@ -45,7 +53,7 @@ except ImportError:
 
 ## 把 JSON 从原文里剪出来再解析
 
-先停下来读 [json.loads 和解析失败](../../stage0_basics/python_basics/27_json_parse.md)。
+👉 不懂解析不一定合法的 JSON？先看 [基础课 · 解析 JSON](../../00_python_basics/27_json_parse.md)。
 
 `_extract_json_text` 用 `find` 和 `rfind`。找不到花括号就把原文交给 `loads`，让它失败。失败被 `except json.JSONDecodeError` 接住，变成兜底，不往外抛。
 

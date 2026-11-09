@@ -1,5 +1,14 @@
 # 顺着 `04_cli_chatbot.py` 逐行读
 
+## 本课需要的基础课
+
+新的是 `while` 和 `input`。集合写在列表那一课里。字符串的 `\n` 只是再用一次。
+
+- [基础课 · 列表和字典](../../00_python_basics/13_lists_dicts.md)
+- [基础课 · while](../../00_python_basics/15_while.md)
+- [基础课 · input](../../00_python_basics/19_input.md)
+- [基础课 · 字符串](../../00_python_basics/07_strings.md)
+
 先运行：
 
 ```bash
@@ -22,7 +31,7 @@ EXIT_COMMANDS = {"quit", "exit", "q", "退出"}
 
 `0.3` 是希望客服说法稳一点。它不让回复变得更真实。
 
-`EXIT_COMMANDS` 用花括号但里面没有冒号，所以是集合，不是字典。先回到 [列表课](../python_basics/13_lists_dicts.md) 的「集合」一节，把那两行 `in` 的例子敲一遍，如果当时跳过了。
+`EXIT_COMMANDS` 用花括号但里面没有冒号，所以是集合，不是字典。👉 不懂集合？先看 [基础课 · 列表和字典](../../00_python_basics/13_lists_dicts.md) 的「集合」一节，把那两行 `in` 的例子敲一遍，如果当时跳过了。
 
 `"quit" in EXIT_COMMANDS` 为真。`"我想 quit" in EXIT_COMMANDS` 为假。注释说的就是：句子中间出现这个词，不要把人踢出去。
 
@@ -81,13 +90,13 @@ while True:
         return
 ```
 
-先停下来读 [while](../python_basics/15_while.md) 和 [input](../python_basics/19_input.md)。`while True` 不会自己停。离开的办法在后面的 `return`。
+👉 不懂 while？先看 [基础课 · while](../../00_python_basics/15_while.md)。👉 不懂 input？先看 [基础课 · input](../../00_python_basics/19_input.md)。`while True` 不会自己停。离开的办法在后面的 `return`。
 
 `input` 交回字符串。`.strip()` 去掉首尾空格，避免 `退出 ` 对不上集合。
 
 `EOFError` 是没有下一行了（Ctrl+D 或管道结束）。这不是 401。当成告别。`KeyboardInterrupt` 是 Ctrl+C。两个 `except` 都 `return`，函数结束，循环一起结束。
 
-`\n` 在 [字符串课](../python_basics/07_strings.md)。Ctrl+C 时光标常常停在一行中间，先换行，字才不会粘在 `你：` 后面。
+`\n` 在 [基础课 · 字符串](../../00_python_basics/07_strings.md)。Ctrl+C 时光标常常停在一行中间，先换行，字才不会粘在 `你：` 后面。
 
 ## 第 77 到 84 行：先认口令，再决定发不发
 

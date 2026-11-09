@@ -10,7 +10,7 @@
 - 流式输出时，完整回复是谁负责拼起来的？只打印、不保存会怎样？
 - 密钥为什么不能写在 `.py` 文件里，创建客户端和真正拨号又差在哪？
 
-这些答案不在代码注释里。注释只写「为什么这样写」。语法第一次出现时，导读会让你停下来去读 `python_basics/`。不要把那些小课当成可以跳过的附录。
+这些答案不在代码注释里。注释只写「为什么这样写」。语法在单独的 [基础课](../00_python_basics/README.md) 里。导读第一次用到某个概念时，会写「👉 不懂……？先看基础课」。不要把那门课当成可以跳过的附录，也不要在本目录里再找一份语法讲义。
 
 没有 DeepSeek 密钥也可以把文档读完。密钥缺失时，脚本会打印中文说明并退出，不会把仓库弄坏。`python -m py_compile` 这种只检查语法的命令也不需要密钥。
 
@@ -24,7 +24,7 @@
 | `03_streaming.py` | 边生成边打印，并把片段拼回一整段 | [第 3 课](docs/03_streaming.md) |
 | `04_cli_chatbot.py` | 一个可以连续聊天的命令行客服，输入 `退出` 结束 | [第 4 课](docs/04_cli_chatbot.md) |
 
-零基础的读法在 [docs/README.md](docs/README.md)：顺着脚本走，遇到新语法就进入 [python_basics](python_basics/README.md)。名词表在 [docs/glossary.md](docs/glossary.md)，只解释大模型用词，不解释 `import`。阶段关系在 [docs/stage_summary.md](docs/stage_summary.md)。
+零基础的读法在 [docs/README.md](docs/README.md)：顺着脚本走，遇到新语法就进入 [基础课](../00_python_basics/README.md)。本阶段要用哪些课，列在导读开头的「本阶段需要的基础课」。名词表在 [docs/glossary.md](docs/glossary.md)，只解释大模型用词，不解释 `import`。阶段关系在 [docs/stage_summary.md](docs/stage_summary.md)。
 
 四个脚本都要在**项目根目录**运行（根目录是有 `README.md` 和 `.env.example` 的那一层）。配置是按文件位置寻找 `.env` 的，所以在 `stage0_basics` 目录里执行 `python 01_hello_llm.py` 也可以找到密钥。教程下面的命令统一从根目录写。
 
@@ -166,7 +166,7 @@ client = OpenAI(api_key="sk-不要把真实密钥写在这里")
 
 从来没写过程序的人，按 [docs/README.md](docs/README.md) 走。顺序是：
 
-1. [终端](python_basics/01_terminal.md)、[怎样运行 `.py`](python_basics/02_py_file.md)、[`print`](python_basics/03_print.md)。这三课不依赖本仓库的脚本。
+1. [终端](../00_python_basics/01_terminal.md)、[怎样运行 `.py`](../00_python_basics/02_py_file.md)、[`print`](../00_python_basics/03_print.md)。这三课不依赖本仓库的脚本。也可以直接打开 [基础课目录](../00_python_basics/README.md)，按课号往下学，或等导读叫停再查。
 2. 打开 [01 的逐行导读](docs/01_hello_llm.md)。它会在 `import`、变量、字符串、函数、列表、`if`、`for`、异常、对象和 JSON 第一次出现时叫你停下来。执行到导入那一行，转去 [config.py 的逐行导读](docs/00_config.md)，读完再回来。
 3. 运行并逐行读 [02](docs/02_messages_roles.md)、[03](docs/03_streaming.md)、[04](docs/04_cli_chatbot.md)。新出现的 `while`、`input`、生成器，导读里有单独的停课点。
 4. 读 [阶段小结](docs/stage_summary.md)。

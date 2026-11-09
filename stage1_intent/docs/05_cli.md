@@ -1,5 +1,12 @@
 # 顺着带意图的客服逐行读
 
+## 本课需要的基础课
+
+本课没有新的 Python 语法。跨文件夹导入会再点一次。`while`、`input`、字典都在阶段 0 的清单里。
+
+- [基础课 · 从另一个文件夹导入](../../00_python_basics/26_import_other_folder.md)
+- [本阶段清单](README.md#本阶段需要的基础课)
+
 先在没有密钥时运行：
 
 ```bash
@@ -14,7 +21,7 @@ python stage1_intent/05_cli_with_intent.py
 
 退出命令、空行、`input`、历史列表，都和 `04_cli_chatbot.py` 相同。复习那份导读即可。新的是每一句顾客的话在进模型之前先分类。
 
-文件开头先 `stage0_link.enable()`，才能 `from config import ...`。复习 [另一个文件夹](../../stage0_basics/python_basics/26_import_other_folder.md)。
+文件开头先 `stage0_link.enable()`，才能 `from config import ...`。复习 [基础课 · 从另一个文件夹导入](../../00_python_basics/26_import_other_folder.md)。
 
 ## 没有密钥的那一支
 
@@ -57,6 +64,6 @@ messages.append({"role": "system", "content": note})
 
 ## 这一课没有新的 Python 语法
 
-`while`、`input`、字典、函数返回两样东西，都链接回阶段 0。若某行看不懂，回到对应小课，不要在这一份里重新学一遍 `while`。
+`while`、`input`、字典、函数返回两样东西，都在 [基础课](../../00_python_basics/README.md) 里。若某行看不懂，回到对应的那一课，不要在这一份里重新学一遍 `while`。
 
 意图这一层做完了。它还不会下单、不会写工单。下一份说明阶段 2 接在哪里：[阶段小结](stage_summary.md)。
