@@ -10,7 +10,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# 阶段 2 运行脚本时生成的 SQLite 数据库。练习数据不要提交。
+# 阶段 2、阶段 3 运行脚本时生成的 SQLite 数据库。练习数据不要提交。
 *.db
 *.db-journal
 *.db-wal

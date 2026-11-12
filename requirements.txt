@@ -1,4 +1,5 @@
-# 阶段 0 只需要两个库。在已经激活的虚拟环境里执行：
+# 阶段 0 需要下面两个库。阶段 3 再加 redis 和 fakeredis。
+# 在已经激活的虚拟环境里执行：
 #     pip install -r requirements.txt
 #
 # openai
@@ -11,6 +12,17 @@
 #   从项目根目录的 .env 读取配置。密钥放在 .env 里，而不是写进 .py 文件。
 #
 # 阶段 2 的数据库用 Python 自带的 sqlite3，不用往这个文件里加包。
+#
+# redis
+#   Redis 的 Python 客户端。导入名和 pip 包名都是 redis。
+#   阶段 3 用它保存短期记忆。本机没启动 Redis 时，脚本会改用下面的替身。
+#
+# fakeredis
+#   用内存假装一台 Redis，方法名和 redis 客户端一致。
+#   离线演示，以及连不上本机 6379 时，用它把练习跑完。
+#   它的数据随进程结束，不能代替真正的 Redis。
 
 openai>=1.40.0,<4
 python-dotenv>=1.0.1,<2
+redis>=5.0.1,<7
+fakeredis>=2.26.1,<3

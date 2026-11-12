@@ -24,6 +24,8 @@ python stage2_tools_tickets/07_offline_demo.py
 
 退款只会写成工单，不会打款。不要把真实顾客的订单写进这些练习脚本。
 
+阶段 3 把这一次进程里的对话和正在追问的订单号放进 Redis，从 [stage3_memory/README.md](../stage3_memory/README.md) 继续。
+
 ## 文件一览
 
 | 文件 | 你要它做什么 | 教程 |
