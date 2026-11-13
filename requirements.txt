@@ -1,4 +1,5 @@
 # 阶段 0 需要下面两个库。阶段 3 再加 redis 和 fakeredis。
+# 阶段 4 的检索只用标准库，不往这个文件里加包。
 # 在已经激活的虚拟环境里执行：
 #     pip install -r requirements.txt
 #
