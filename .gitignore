@@ -16,6 +16,10 @@ __pycache__/
 # 阶段 5 运行时生成的向量索引和长期记忆。不要提交。
 stage5_vector_memory/data/
 *.faiss
+
+# 阶段 6 运行时生成的审计日志。即使已经打码，也不要提交。
+stage6_compliance/data/
+*.jsonl
 *.db-journal
 *.db-wal
 *.db-shm
