@@ -1,5 +1,6 @@
 # 阶段 0 需要下面两个库。阶段 3 再加 redis 和 fakeredis。
 # 阶段 4 的检索只用标准库，不往这个文件里加包。
+# 阶段 5 加 numpy、faiss-cpu，以及可选的 sentence-transformers。
 # 在已经激活的虚拟环境里执行：
 #     pip install -r requirements.txt
 #
@@ -22,8 +23,25 @@
 #   用内存假装一台 Redis，方法名和 redis 客户端一致。
 #   离线演示，以及连不上本机 6379 时，用它把练习跑完。
 #   它的数据随进程结束，不能代替真正的 Redis。
+#
+# numpy
+#   阶段 5 用来装向量。FAISS 要 float32 的连续数组，不是普通列表。
+#
+# faiss-cpu
+#   阶段 5 的向量索引。本课只用 IndexFlatIP：归一化之后，内积就是余弦。
+#   包名带 cpu。不要装带 GPU 的 faiss，练习用不到显卡。
+#
+# sentence-transformers
+#   用来在本机加载中文嵌入模型 BAAI/bge-small-zh-v1.5。
+#   它会再装很大的 torch，第一次运行还会下载模型。
+#   可以不装。删掉下面这一行，并设置 USE_FAKE_EMBEDDING=1，
+#   阶段 5 会改用哈希二字词假向量，FAISS 的练习仍能跑完。
+#   假向量对得上相同的字，对不上「退钱」和「退款」。
 
 openai>=1.40.0,<4
 python-dotenv>=1.0.1,<2
 redis>=5.0.1,<7
 fakeredis>=2.26.1,<3
+numpy>=1.26,<3
+faiss-cpu>=1.8,<2
+sentence-transformers>=3.0,<6

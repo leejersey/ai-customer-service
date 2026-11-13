@@ -12,6 +12,10 @@ __pycache__/
 
 # 阶段 2、阶段 3 运行脚本时生成的 SQLite 数据库。练习数据不要提交。
 *.db
+
+# 阶段 5 运行时生成的向量索引和长期记忆。不要提交。
+stage5_vector_memory/data/
+*.faiss
 *.db-journal
 *.db-wal
 *.db-shm
