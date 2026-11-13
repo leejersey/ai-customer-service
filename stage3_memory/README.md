@@ -40,6 +40,8 @@ Windows 建议用 Docker Desktop，执行上面同一条命令。或者在 WSL �
 
 退款仍然只会写成工单，不会打款。不要把真实顾客的对话写进这些练习。
 
+阶段 4 在回答政策之前先查店铺自己的说明，从 [stage4_rag/README.md](../stage4_rag/README.md) 继续。
+
 ## 文件一览
 
 | 文件 | 你要它做什么 | 教程 |
